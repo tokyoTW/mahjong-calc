@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>麻雀 符・点数計算ナビ</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #eff6ff;
+      --primary-border: #93c5fd;
+      --accent: #b91c1c;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 16px;
+      padding-bottom: 80px;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ヘッダー */
+    header {
+      text-align: center;
+      padding: 12px 0 4px;
+    }
+    header h1 {
+      font-size: 1.35rem;
+      color: var(--primary);
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    header p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* カード */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      border: 1px solid var(--border);
+    }
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .step-badge {
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-right: 6px;
+    }
+
+    /* 質問ブロック */
+    .question-block {
+      margin-bottom: 16px;
+    }
+    .question-block:last-child {
+      margin-bottom: 0;
+    }
+    .q-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    /* ボタングループ */
+    .btn-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+      gap: 8px;
+    }
+    .btn-toggle {
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      padding: 10px 8px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .btn-toggle.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 6px rgba(30, 58, 138, 0.25);
+    }
+    .btn-toggle:disabled {
+      opacity: 0.4;
+      background: #e2e8f0;
+      border-color: #cbd5e1;
+      color: #94a3b8;
+      cursor: not-allowed;
+      text-decoration: line-through;
+      box-shadow: none;
+    }
+
+    /* 役グリッド */
+    .yaku-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 8px;
+    }
+    .yaku-btn {
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .yaku-btn .han-tag {
+      font-size: 0.72rem;
+      background: #e2e8f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #475569;
+    }
+    .yaku-btn.active {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .yaku-btn.active .han-tag {
+      background: var(--primary);
+      color: #ffffff;
+    }
+    .yaku-btn:disabled {
+      opacity: 0.35;
+      background: #f1f5f9;
+      border-color: #e2e8f0;
+      color: #94a3b8;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+
+    /* ドラステッパー */
+    .stepper {
+      display: inline-flex;
+      align-items: center;
+      background: #f1f5f9;
+      border-radius: 8px;
+      border: 1.5px solid #cbd5e1;
+      overflow: hidden;
+    }
+    .stepper button {
+      background: transparent;
+      border: none;
+      padding: 8px 16px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      cursor: pointer;
+    }
+    .stepper button:hover {
+      background: #e2e8f0;
+    }
+    .stepper span {
+      min-width: 44px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    /* スキップ案内通知 */
+    .skip-notice {
+      background: #ecfdf5;
+      border: 1.5px solid #a7f3d0;
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #065f46;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    /* 符計算用カウンター */
+    .kotsu-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.85rem;
+    }
+    .kotsu-row:last-child {
+      border-bottom: none;
+    }
+    .kotsu-name {
+      display: flex;
+      flex-direction: column;
+    }
+    .kotsu-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* 固定結果バー（画面下部） */
+    .result-bar {
+      position: sticky;
+      bottom: 12px;
+      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+      color: #ffffff;
+      border-radius: 14px;
+      padding: 14px 20px;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+    .result-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .result-meta {
+      font-size: 0.8rem;
+      color: #93c5fd;
+      font-weight: 600;
+    }
+    .result-yomi {
+      font-size: 0.75rem;
+      color: #cbd5e1;
+    }
+    .result-score {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fef08a;
+      letter-spacing: 0.5px;
+      text-align: right;
+    }
+    .result-breakdown {
+      font-size: 0.7rem;
+      color: #e2e8f0;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>🀄 麻雀 符・点数計算ナビ</h1>
+    <p>質問に答えるだけで、排他ルールと符計算スキップを自動判定します</p>
+  </header>
+
+  <!-- 第1フェーズ：翻の確定 -->
+  <section class="card">
+    <div class="card-title">
+      <span><span class="step-badge">STEP 1</span>基本条件と役（翻数）</span>
+      <span id="hanSummary" style="font-size:0.85rem; color:#2563eb;">1翻</span>
+    </div>
+
+    <!-- 親・子 / ロン・ツモ -->
+    <div class="question-block">
+      <span class="q-label">① あなたの立場とアガリ方</span>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+        <div class="btn-group">
+          <button class="btn-toggle active" id="btnChild" onclick="setRole('child')">子</button>
+          <button class="btn-toggle" id="btnDealer" onclick="setRole('dealer')">親</button>
+        </div>
+        <div class="btn-group">
+          <button class="btn-toggle active" id="btnRon" onclick="setWinType('ron')">ロン</button>
+          <button class="btn-toggle" id="btnTsumo" onclick="setWinType('tsumo')">ツモ</button>
+        </div>
+      </div>
+      <div class="btn-group">
+        <button class="btn-toggle active" id="btnMenzen" onclick="setMenzen(true)">門前（鳴いてない）</button>
+        <button class="btn-toggle" id="btnNaki" onclick="setMenzen(false)">副露（ポン・チーあり）</button>
+      </div>
+    </div>
+
+    <!-- リーチ -->
+    <div class="question-block" id="riichiBlock">
+      <span class="q-label">② リーチしましたか？</span>
+      <div class="btn-group">
+        <button class="btn-toggle active" id="riichiNone" onclick="setRiichi('none')">なし</button>
+        <button class="btn-toggle" id="riichiNormal" onclick="setRiichi('riichi')">リーチ (1翻)</button>
+        <button class="btn-toggle" id="riichiDouble" onclick="setRiichi('double')">Wリーチ (2翻)</button>
+      </div>
+    </div>
+
+    <!-- 役の選択（排他制御） -->
+    <div class="question-block">
+      <span class="q-label">③ ついている役を選んでください（矛盾する役は自動除外されます）</span>
+      <div class="yaku-grid" id="yakuContainer"></div>
+    </div>
+
+    <!-- ドラ -->
+    <div class="question-block">
+      <span class="q-label">④ ドラ・赤ドラ・裏ドラの合計枚数</span>
+      <div class="stepper">
+        <button onclick="changeDora(-1)">−</button>
+        <span id="doraCount">0</span>
+        <button onclick="changeDora(1)">＋</button>
+      </div>
+    </div>
+
+    <!-- スキップ案内 -->
+    <div id="skipMessage" class="skip-notice" style="display:none;"></div>
+  </section>
+
+  <!-- 第2フェーズ：符の確定（必要な場合のみ表示） -->
+  <section class="card" id="fuSection">
+    <div class="card-title">
+      <span><span class="step-badge">STEP 2</span>手牌の符計算</span>
+      <span id="fuSummary" style="font-size:0.85rem; color:#b91c1c;">計算中: 30符</span>
+    </div>
+
+    <div class="question-block">
+      <span class="q-label">① 待ちの形は？</span>
+      <div class="btn-group">
+        <button class="btn-toggle active" id="waitRyanmen" onclick="setWait('ryanmen')">両面 / シャンポン (+0符)</button>
+        <button class="btn-toggle" id="waitBad" onclick="setWait('bad')">カンチャン / ペンチャン / 単騎 (+2符)</button>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <span class="q-label">② アタマ（雀頭）の種類は？</span>
+      <div class="btn-group">
+        <button class="btn-toggle active" id="headNormal" onclick="setHead('normal')">数牌 / 役のない風牌 (+0符)</button>
+        <button class="btn-toggle" id="headYakuhai" onclick="setHead('yakuhai')">役牌（白・發・中・自風・場風） (+2符)</button>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <span class="q-label">③ 刻子（3枚組）や槓子（4枚組）の個数</span>
+      <div id="kotsuContainer"></div>
+    </div>
+  </section>
+</div>
+
+<!-- 画面下の結果バー -->
+<div class="result-bar">
+  <div class="result-info">
+    <div class="result-meta" id="resMeta">子 / 1翻 30符</div>
+    <div class="result-yomi" id="resYomi">セン</div>
+  </div>
+  <div>
+    <div class="result-score" id="resScore">1,000 点</div>
+    <div class="result-breakdown" id="resBreakdown"></div>
+  </div>
+</div>
+
+<script>
+// --- 状態管理 ---
+const state = {
+  role: 'child',     // 'child' | 'dealer'
+  winType: 'ron',    // 'ron' | 'tsumo'
+  menzen: true,      // true | false
+  riichi: 'none',    // 'none' | 'riichi' | 'double'
+  selectedYaku: [],  // 役ID配列
+  dora: 0,
+  waitType: 'ryanmen', // 'ryanmen' | 'bad'
+  headType: 'normal',  // 'normal' | 'yakuhai'
+  kotsu: {
+    m2: 0,  // 中張牌の明刻 (+2)
+    m4: 0,  // 中張の暗刻 / 19字の明刻 (+4)
+    m8: 0,  // 19字の暗刻 / 中張の明槓 (+8)
+    m16: 0, // 19字の明槓 / 中張の暗槓 (+16)
+    m32: 0  // 19字の暗槓 (+32)
+  }
+};
+
+// 役マスター
+const YAKU_LIST = [
+  { id: 'pinfu', name: '平和 (ピンフ)', han: 1, menzenOnly: true, excludes: ['yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind', 'toitoi', 'sanankou', 'chiitoitsu'] },
+  { id: 'tanyao', name: 'タンヤオ', han: 1, menzenOnly: false, excludes: ['yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind', 'honitsu', 'chinitsu', 'chanta', 'junchan', 'honroto'] },
+  { id: 'yakuhai_haku', name: '役牌 (白)', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
+  { id: 'yakuhai_hatsu', name: '役牌 (發)', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
+  { id: 'yakuhai_chun', name: '役牌 (中)', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
+  { id: 'yakuhai_wind', name: '役牌 (自風/場風)', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
+  { id: 'iipeikou', name: '一盃口', han: 1, menzenOnly: true, excludes: ['chiitoitsu', 'toitoi'] },
+  { id: 'chiitoitsu', name: '七対子', han: 2, menzenOnly: true, excludes: ['pinfu', 'iipeikou', 'toitoi', 'sanankou'] },
+  { id: 'toitoi', name: '対々和 (トイトイ)', han: 2, menzenOnly: false, excludes: ['pinfu', 'chiitoitsu', 'iipeikou'] },
+  { id: 'sanankou', name: '三暗刻', han: 2, menzenOnly: false, excludes: ['pinfu', 'chiitoitsu'] },
+  { id: 'sanshoku', name: '三色同順', han: 2, menzenOnly: false, hanNaki: 1, excludes: ['chiitoitsu'] },
+  { id: 'ittsu', name: '一気通貫', han: 2, menzenOnly: false, hanNaki: 1, excludes: ['tanyao', 'chiitoitsu'] },
+  { id: 'chanta', name: 'チャンタ', han: 2, menzenOnly: false, hanNaki: 1, excludes: ['tanyao', 'junchan', 'chinitsu'] },
+  { id: 'junchan', name: '純チャン', han: 3, menzenOnly: false, hanNaki: 2, excludes: ['tanyao', 'chanta', 'yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind', 'honitsu'] },
+  { id: 'honitsu', name: '混一色', han: 3, menzenOnly: false, hanNaki: 2, excludes: ['tanyao', 'chinitsu', 'junchan'] },
+  { id: 'chinitsu', name: '清一色', han: 6, menzenOnly: false, hanNaki: 5, excludes: ['tanyao', 'honitsu', 'chanta', 'yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind'] }
+];
+
+const KOTSU_TYPES = [
+  { key: 'm2', name: '中張牌の明刻 (ポン)', sub: '2〜8の数牌 (+2符)' },
+  { key: 'm4', name: '中張の暗刻 / 19字の明刻', sub: '手牌の2〜8刻子、または1・9・字牌のポン (+4符)' },
+  { key: 'm8', name: '19字の暗刻 / 中張の明槓', sub: '手牌の1・9・字牌刻子、または2〜8のミンカン (+8符)' },
+  { key: 'm16', name: '19字の明槓 / 中張の暗槓', sub: '1・9・字のミンカン、または2〜8のアンカン (+16符)' },
+  { key: 'm32', name: '1・9・字牌の暗槓', sub: '手牌で揃えたアンカン (+32符)' }
+];
+
+// --- 初期化 ---
+function init() {
+  renderYakuGrid();
+  renderKotsuRows();
+  recalc();
+}
+
+// 役グリッドの描画
+function renderYakuGrid() {
+  const container = document.getElementById('yakuContainer');
+  container.innerHTML = '';
+
+  YAKU_LIST.forEach(yaku => {
+    const btn = document.createElement('button');
+    btn.className = 'yaku-btn';
+    btn.id = 'yaku_' + yaku.id;
+
+    const actualHan = (!state.menzen && yaku.hanNaki !== undefined) ? yaku.hanNaki : yaku.han;
+    btn.innerHTML = `<span>${yaku.name}</span><span class="han-tag">${actualHan}翻</span>`;
+
+    btn.onclick = () => toggleYaku(yaku.id);
+    container.appendChild(btn);
+  });
+}
+
+// 刻子カウンターの描画
+function renderKotsuRows() {
+  const container = document.getElementById('kotsuContainer');
+  container.innerHTML = '';
+
+  KOTSU_TYPES.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'kotsu-row';
+    row.innerHTML = `
+      <div class="kotsu-name">
+        <span>${item.name}</span>
+        <span class="kotsu-sub">${item.sub}</span>
+      </div>
+      <div class="stepper">
+        <button onclick="changeKotsu('${item.key}', -1)">−</button>
+        <span id="kotsu_${item.key}">0</span>
+        <button onclick="changeKotsu('${item.key}', 1)">＋</button>
+      </div>
+    `;
+    container.appendChild(row);
+  });
+}
+
+// --- 操作ハンドラ ---
+function setRole(role) {
+  state.role = role;
+  document.getElementById('btnChild').classList.toggle('active', role === 'child');
+  document.getElementById('btnDealer').classList.toggle('active', role === 'dealer');
+  recalc();
+}
+
+function setWinType(winType) {
+  state.winType = winType;
+  document.getElementById('btnRon').classList.toggle('active', winType === 'ron');
+  document.getElementById('btnTsumo').classList.toggle('active', winType === 'tsumo');
+  recalc();
+}
+
+function setMenzen(menzen) {
+  state.menzen = menzen;
+  document.getElementById('btnMenzen').classList.toggle('active', menzen);
+  document.getElementById('btnNaki').classList.toggle('active', !menzen);
+
+  // 鳴きならリーチ不可
+  const riichiBlock = document.getElementById('riichiBlock');
+  if (!menzen) {
+    state.riichi = 'none';
+    riichiBlock.style.opacity = '0.4';
+    riichiBlock.style.pointerEvents = 'none';
+  } else {
+    riichiBlock.style.opacity = '1';
+    riichiBlock.style.pointerEvents = 'auto';
+  }
+
+  // 門前役の自動解除
+  state.selectedYaku = state.selectedYaku.filter(id => {
+    const yaku = YAKU_LIST.find(y => y.id === id);
+    return !(y && y.menzenOnly && !menzen);
+  });
+
+  renderYakuGrid();
+  recalc();
+}
+
+function setRiichi(riichi) {
+  state.riichi = riichi;
+  ['riichiNone', 'riichiNormal', 'riichiDouble'].forEach(id => {
+    document.getElementById(id).classList.remove('active');
+  });
+  if (riichi === 'none') document.getElementById('riichiNone').classList.add('active');
+  if (riichi === 'riichi') document.getElementById('riichiNormal').classList.add('active');
+  if (riichi === 'double') document.getElementById('riichiDouble').classList.add('active');
+  recalc();
+}
+
+function toggleYaku(yakuId) {
+  const index = state.selectedYaku.indexOf(yakuId);
+  if (index >= 0) {
+    state.selectedYaku.splice(index, 1);
+  } else {
+    // 排他関係にある役を自動解除
+    const target = YAKU_LIST.find(y => y.id === yakuId);
+    if (target && target.excludes) {
+      state.selectedYaku = state.selectedYaku.filter(id => !target.excludes.includes(id));
+    }
+    // 逆方向の排他も解除
+    state.selectedYaku = state.selectedYaku.filter(id => {
+      const y = YAKU_LIST.find(item => item.id === id);
+      return !(y && y.excludes && y.excludes.includes(yakuId));
+    });
+
+    state.selectedYaku.push(yakuId);
+  }
+  recalc();
+}
+
+function changeDora(delta) {
+  state.dora = Math.max(0, Math.min(13, state.dora + delta));
+  document.getElementById('doraCount').innerText = state.dora;
+  recalc();
+}
+
+function setWait(wait) {
+  state.waitType = wait;
+  document.getElementById('waitRyanmen').classList.toggle('active', wait === 'ryanmen');
+  document.getElementById('waitBad').classList.toggle('active', wait === 'bad');
+  recalc();
+}
+
+function setHead(head) {
+  state.headType = head;
+  document.getElementById('headNormal').classList.toggle('active', head === 'normal');
+  document.getElementById('headYakuhai').classList.toggle('active', head === 'yakuhai');
+  recalc();
+}
+
+function changeKotsu(key, delta) {
+  state.kotsu[key] = Math.max(0, Math.min(4, state.kotsu[key] + delta));
+  document.getElementById('kotsu_' + key).innerText = state.kotsu[key];
+  recalc();
+}
+
+// --- 排他ルールの判定とボタン更新 ---
+function updateYakuButtons() {
+  YAKU_LIST.forEach(yaku => {
+    const btn = document.getElementById('yaku_' + yaku.id);
+    if (!btn) return;
+
+    const isSelected = state.selectedYaku.includes(yaku.id);
+    btn.classList.toggle('active', isSelected);
+
+    let disabled = false;
+
+    // 門前限定役
+    if (yaku.menzenOnly && !state.menzen) disabled = true;
+
+    // 他の選択役との排他チェック
+    state.selectedYaku.forEach(selectedId => {
+      if (selectedId === yaku.id) return;
+      const sYaku = YAKU_LIST.find(y => y.id === selectedId);
+      if (sYaku && sYaku.excludes && sYaku.excludes.includes(yaku.id)) disabled = true;
+      if (yaku.excludes && yaku.excludes.includes(selectedId)) disabled = true;
+    });
+
+    btn.disabled = disabled;
+  });
+
+  // タンヤオ選択時の符計算（役牌頭・19字）の無効化
+  const hasTanyao = state.selectedYaku.includes('tanyao');
+  const headYakuhaiBtn = document.getElementById('headYakuhai');
+  if (hasTanyao) {
+    if (state.headType === 'yakuhai') setHead('normal');
+    headYakuhaiBtn.disabled = true;
+    headYakuhaiBtn.title = 'タンヤオ成立時は役牌雀頭不可';
+  } else {
+    headYakuhaiBtn.disabled = false;
+    headYakuhaiBtn.title = '';
+  }
+}
+
+// --- 符・翻・点数の総合計算 ---
+function recalc() {
+  updateYakuButtons();
+
+  // 1. 翻数の集計
+  let han = 0;
+  if (state.riichi === 'riichi') han += 1;
+  if (state.riichi === 'double') han += 2;
+
+  state.selectedYaku.forEach(id => {
+    const y = YAKU_LIST.find(item => item.id === id);
+    if (y) {
+      const h = (!state.menzen && y.hanNaki !== undefined) ? y.hanNaki : y.han;
+      han += h;
+    }
+  });
+
+  han += state.dora;
+  document.getElementById('hanSummary').innerText = han + '翻';
+
+  // 2. 符計算スキップ条件の判定
+  const fuSection = document.getElementById('fuSection');
+  const skipMessage = document.getElementById('skipMessage');
+  let finalFu = 30;
+  let skipReason = '';
+
+  const hasPinfu = state.selectedYaku.includes('pinfu');
+  const hasChiitoi = state.selectedYaku.includes('chiitoitsu');
+
+  if (han >= 5) {
+    skipReason = `🎉 <strong>${han}翻で満貫以上確定！</strong> 符に関係なく点数が決まるため、符計算は不要です。`;
+  } else if (hasChiitoi) {
+    finalFu = 25;
+    skipReason = '七対子（チートイツ）は <strong>25符固定</strong> です。符計算は不要です。';
+  } else if (hasPinfu && state.winType === 'tsumo') {
+    finalFu = 20;
+    skipReason = '門前平和ツモは特例により <strong>20符固定</strong> です。符計算は不要です。';
+  } else if (hasPinfu && state.winType === 'ron') {
+    finalFu = 30;
+    skipReason = '門前平和ロンは <strong>30符固定</strong> です。符計算は不要です。';
+  }
+
+  if (skipReason) {
+    fuSection.style.display = 'none';
+    skipMessage.innerHTML = skipReason;
+    skipMessage.style.display = 'flex';
+  } else {
+    fuSection.style.display = 'block';
+    skipMessage.style.display = 'none';
+
+    // 通常の符計算
+    let rawFu = 20; // 底符
+    if (state.menzen && state.winType === 'ron') rawFu += 10; // 門前加符
+    if (state.winType === 'tsumo') rawFu += 2; // ツモ符
+    if (state.waitType === 'bad') rawFu += 2;  // 愚形待ち
+    if (state.headType === 'yakuhai') rawFu += 2; // 役牌頭
+
+    rawFu += state.kotsu.m2 * 2;
+    rawFu += state.kotsu.m4 * 4;
+    rawFu += state.kotsu.m8 * 8;
+    rawFu += state.kotsu.m16 * 16;
+    rawFu += state.kotsu.m32 * 32;
+
+    // 切り上げ（鳴きロンで20符の形は30符特例）
+    if (!state.menzen && state.winType === 'ron' && rawFu === 20) {
+      finalFu = 30;
+    } else {
+      finalFu = Math.ceil(rawFu / 10) * 10;
+    }
+    if (finalFu < 30 && !hasChiitoi) finalFu = 30;
+
+    document.getElementById('fuSummary').innerText = `計 ${rawFu}符 ➔ ${finalFu}符`;
+  }
+
+  // 3. 点数算出と表示更新
+  updateResult(han, finalFu);
+}
+
+// 点数計算テーブル（1〜4翻）
+const SCORE_DATA = {
+  child: {
+    20: { 2: { tsumo: '400・700', yomi: 'ヨンヒャク・ナナヒャク' }, 3: { tsumo: '700・1300', yomi: 'ナナヒャク・センサンビャク' }, 4: { tsumo: '1300・2600', yomi: 'センサンビャク・ニセンロッピャク' } },
+    25: { 2: { ron: 1600, yomi: 'イチロク' }, 3: { ron: 3200, tsumo: '800・1600', yomi: 'ザンニ / ハッピャク・イチロク' }, 4: { ron: 6400, tsumo: '1600・3200', yomi: 'ロクヨン / イチロク・ザンニ' } },
+    30: { 1: { ron: 1000, tsumo: '300・500', yomi: 'セン / サンビャク・ゴヒャク' }, 2: { ron: 2000, tsumo: '500・1000', yomi: 'ニセン / ゴヒャク・セン' }, 3: { ron: 3900, tsumo: '1000・2000', yomi: 'サンキュウ / セン・ニセン' }, 4: { ron: 7700, tsumo: '2000・3900', yomi: 'ナナナナ / ニセン・サンキュウ' } },
+    40: { 1: { ron: 1300, tsumo: '400・700', yomi: 'センサン / ヨンヒャク・ナナヒャク' }, 2: { ron: 2600, tsumo: '700・1300', yomi: 'ニーロク / ナナヒャク・センサン' }, 3: { ron: 5200, tsumo: '1300・2600', yomi: 'ゴニ / センサン・ニーロク' }, 4: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン / ニセン・ヨンセン' } },
+    50: { 1: { ron: 1600, tsumo: '400・800', yomi: 'イチロク / ヨンヒャク・ハッピャク' }, 2: { ron: 3200, tsumo: '800・1600', yomi: 'ザンニ / ハッピャク・イチロク' }, 3: { ron: 6400, tsumo: '1600・3200', yomi: 'ロクヨン / イチロク・ザンニ' }, 4: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン / ニセン・ヨンセン' } },
+    60: { 1: { ron: 2000, tsumo: '500・1000', yomi: 'ニセン / ゴヒャク・セン' }, 2: { ron: 3900, tsumo: '1000・2000', yomi: 'サンキュウ / セン・ニセン' }, 3: { ron: 7700, tsumo: '2000・3900', yomi: 'ナナナナ / ニセン・サンキュウ' }, 4: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン / ニセン・ヨンセン' } },
+    70: { 1: { ron: 2300, yomi: 'ニーサン' }, 2: { ron: 4500, yomi: 'ヨンゴー' }, 3: { ron: 8000, yomi: 'マンガン' }, 4: { ron: 8000, yomi: 'マンガン' } }
+  },
+  dealer: {
+    20: { 2: { tsumo: '700オール', yomi: 'ナナヒャクオール' }, 3: { tsumo: '1300オール', yomi: 'センサンビャクオール' }, 4: { tsumo: '2600オール', yomi: 'ニセンロッピャクオール' } },
+    25: { 2: { ron: 2400, yomi: 'ニーヨン' }, 3: { ron: 4800, tsumo: '1600オール', yomi: 'ヨンパチ / イチロクオール' }, 4: { ron: 9600, tsumo: '3200オール', yomi: 'クンロク / ザンニオール' } },
+    30: { 1: { ron: 1500, tsumo: '500オール', yomi: 'イチゴー / ゴヒャクオール' }, 2: { ron: 2900, tsumo: '1000オール', yomi: 'ニック / センオール' }, 3: { ron: 5800, tsumo: '2000オール', yomi: 'ゴッパ / ニセンオール' }, 4: { ron: 11600, tsumo: '3900オール', yomi: 'ピンロク / サンキュウオール' } },
+    40: { 1: { ron: 2000, tsumo: '700オール', yomi: 'ニセン / ナナヒャクオール' }, 2: { ron: 3900, tsumo: '1300オール', yomi: 'サンキュウ / センサンオール' }, 3: { ron: 7700, tsumo: '2600オール', yomi: 'ナナナナ / ニーロクオール' }, 4: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン / ヨンセンオール' } },
+    50: { 1: { ron: 2400, tsumo: '800オール', yomi: 'ニーヨン / ハッピャクオール' }, 2: { ron: 4800, tsumo: '1600オール', yomi: 'ヨンパチ / イチロクオール' }, 3: { ron: 9600, tsumo: '3200オール', yomi: 'クンロク / ザンニオール' }, 4: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン / ヨンセンオール' } },
+    60: { 1: { ron: 2900, tsumo: '1000オール', yomi: 'ニック / センオール' }, 2: { ron: 5800, tsumo: '2000オール', yomi: 'ゴッパ / ニセンオール' }, 3: { ron: 11600, tsumo: '3900オール', yomi: 'ピンロク / サンキュウオール' }, 4: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン / ヨンセンオール' } },
+    70: { 1: { ron: 3400, yomi: 'サンヨン' }, 2: { ron: 6800, yomi: 'ロッパチ' }, 3: { ron: 12000, yomi: 'マンガン' }, 4: { ron: 12000, yomi: 'マンガン' } }
+  }
+};
+
+function updateResult(han, fu) {
+  const isDealer = state.role === 'dealer';
+  const roleName = isDealer ? '親' : '子';
+  const metaEl = document.getElementById('resMeta');
+  const yomiEl = document.getElementById('resYomi');
+  const scoreEl = document.getElementById('resScore');
+  const breakEl = document.getElementById('resBreakdown');
+
+  // 役なしチェック
+  if (han === 0) {
+    metaEl.innerText = `${roleName} / 役なし`;
+    yomiEl.innerText = 'アガれません';
+    scoreEl.innerText = '0 点';
+    breakEl.innerText = '役を1つ以上選択してください';
+    return;
+  }
+
+  // 満貫以上の判定
+  if (han >= 5) {
+    let title = '', scoreStr = '', yomi = '', breakStr = '';
+    if (han === 5) {
+      title = '満貫 (マンガン)';
+      scoreStr = isDealer ? '12,000 点' : '8,000 点';
+      yomi = isDealer ? (state.winType === 'ron' ? 'イチニッパ' : 'ヨンセンオール') : (state.winType === 'ron' ? 'マンガン' : 'ニセン・ヨンセン');
+      breakStr = isDealer ? (state.winType === 'tsumo' ? '4,000点オール' : '') : (state.winType === 'tsumo' ? '子2,000 / 親4,000' : '');
+    } else if (han <= 7) {
+      title = '跳満 (ハネマン)';
+      scoreStr = isDealer ? '18,000 点' : '12,000 点';
+      yomi = isDealer ? (state.winType === 'ron' ? 'イチハチ' : 'ロクセンオール') : (state.winType === 'ron' ? 'イチニッパ' : 'サンゼン・ロクセン');
+      breakStr = isDealer ? (state.winType === 'tsumo' ? '6,000点オール' : '') : (state.winType === 'tsumo' ? '子3,000 / 親6,000' : '');
+    } else if (han <= 10) {
+      title = '倍満 (バイマン)';
+      scoreStr = isDealer ? '24,000 点' : '16,000 点';
+      yomi = isDealer ? (state.winType === 'ron' ? 'ニーヨン' : 'ハッセンオール') : (state.winType === 'ron' ? 'イチロク' : 'ヨンセン・ハッセン');
+      breakStr = isDealer ? (state.winType === 'tsumo' ? '8,000点オール' : '') : (state.winType === 'tsumo' ? '子4,000 / 親8,000' : '');
+    } else if (han <= 12) {
+      title = '三倍満 (サンバイマン)';
+      scoreStr = isDealer ? '36,000 点' : '24,000 点';
+      yomi = isDealer ? (state.winType === 'ron' ? 'サンロク' : 'イチニオール') : (state.winType === 'ron' ? 'ニーヨン' : 'ロクセン・イチニ');
+      breakStr = isDealer ? (state.winType === 'tsumo' ? '12,000点オール' : '') : (state.winType === 'tsumo' ? '子6,000 / 親12,000' : '');
+    } else {
+      title = '数え役満 (ヤクマン)';
+      scoreStr = isDealer ? '48,000 点' : '32,000 点';
+      yomi = isDealer ? (state.winType === 'ron' ? 'ヨンパチ' : 'イチロクオール') : (state.winType === 'ron' ? 'ザンニ' : 'ハッセン・イチロク');
+      breakStr = isDealer ? (state.winType === 'tsumo' ? '16,000点オール' : '') : (state.winType === 'tsumo' ? '子8,000 / 親16,000' : '');
+    }
+
+    metaEl.innerText = `${roleName} / ${han}翻 【${title}】`;
+    yomiEl.innerText = yomi;
+    scoreEl.innerText = scoreStr;
+    breakEl.innerText = breakStr;
+    return;
+  }
+
+  // 1〜4翻の通常計算
+  const safeFu = fu > 70 ? 70 : fu;
+  const table = isDealer ? SCORE_DATA.dealer : SCORE_DATA.child;
+  const entry = (table[safeFu] && table[safeFu][han]) ? table[safeFu][han] : null;
+
+  metaEl.innerText = `${roleName} / ${han}翻 ${safeFu}符`;
+
+  if (!entry) {
+    scoreEl.innerText = '満貫 8,000 点';
+    yomiEl.innerText = 'マンガン';
+    breakEl.innerText = '';
+    return;
+  }
+
+  if (state.winType === 'tsumo') {
+    if (entry.tsumo) {
+      scoreEl.innerText = entry.tsumo;
+      yomiEl.innerText = entry.yomi || '';
+      breakEl.innerText = isDealer ? '各家から均等払い' : '子払い / 親払い';
+    } else {
+      scoreEl.innerText = entry.ron ? entry.ron.toLocaleString() + ' 点' : '-';
+      yomiEl.innerText = entry.yomi || '';
+      breakEl.innerText = '';
+    }
+  } else {
+    if (entry.ron) {
+      scoreEl.innerText = entry.ron.toLocaleString() + ' 点';
+      yomiEl.innerText = entry.yomi || '';
+      breakEl.innerText = '放銃者の全額払い';
+    } else {
+      scoreEl.innerText = entry.tsumo || '-';
+      yomiEl.innerText = entry.yomi || '';
+      breakEl.innerText = '';
+    }
+  }
+}
+
+// 起動
+init();
+</script>
+
+</body>
+</html>
