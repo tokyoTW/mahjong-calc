@@ -105,7 +105,7 @@
     /* ボタングループ */
     .btn-group {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
       gap: 8px;
     }
     .btn-group-2col {
@@ -264,85 +264,89 @@
       margin-top: 12px;
     }
 
-    /* 形につく符（2行×4列テーブル） */
-    .shape-table-wrap {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      border-radius: 10px;
-      border: 1.5px solid #e5d4f5;
+    /* STEP2 ④形（横スクロール不要のレスポンシブカード） */
+    .shape-group {
+      margin-bottom: 14px;
     }
-    .shape-table {
-      width: 100%;
-      min-width: 540px;
-      border-collapse: collapse;
-      background: #ffffff;
-      text-align: center;
+    .shape-group:last-child {
+      margin-bottom: 0;
     }
-    .shape-table th,
-    .shape-table td {
-      border: 1px solid #eadbf5;
-      padding: 8px 6px;
-      vertical-align: middle;
-    }
-    .shape-table thead th {
-      background: linear-gradient(180deg, #fdf2f8 0%, #f5f0ff 100%);
+    .shape-group-header {
+      background: linear-gradient(135deg, #fdf2f8 0%, #f3e8ff 100%);
+      border: 1px solid #e9d5ff;
+      border-radius: 8px;
+      padding: 6px 12px;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      font-weight: 800;
       color: #581c87;
-      font-weight: 700;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
     }
-    .th-sub {
-      display: block;
-      font-size: 0.68rem;
+    .shape-group-sub {
+      font-size: 0.75rem;
       font-weight: 600;
       color: var(--text-muted);
-      margin-bottom: 2px;
     }
-    .th-main {
-      display: block;
-      font-size: 0.92rem;
-      font-weight: 800;
-      color: #6b21a8;
+    .shape-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
     }
-    .th-ruby {
-      display: block;
-      font-size: 0.64rem;
-      font-weight: 600;
-      color: #9333ea;
+    @media (min-width: 600px) {
+      .shape-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
     }
-    .row-header {
-      background: #faf5ff;
-      font-weight: 800;
-      color: #4c1d95;
-      font-size: 0.84rem;
-      width: 112px;
+    .shape-card {
+      background: #ffffff;
+      border: 1.5px solid #eadbf5;
+      border-radius: 10px;
+      padding: 10px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 4px;
+      transition: all 0.15s ease;
     }
-    .row-header-sub {
-      display: block;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-    .shape-cell {
-      transition: background 0.15s ease, opacity 0.15s ease;
-    }
-    .shape-cell.has-count {
+    .shape-card.has-count {
       background: #fdf2f8;
+      border-color: #c084fc;
+      box-shadow: 0 2px 6px rgba(168, 85, 247, 0.14);
     }
-    .shape-cell.disabled-cell {
+    .shape-card.disabled-card {
       opacity: 0.35;
       background: #f5f2f7;
     }
-    .cell-fu {
-      font-size: 0.95rem;
+    .shape-card-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .shape-type-name {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #581c87;
+    }
+    .shape-fu-badge {
+      font-size: 0.85rem;
       font-weight: 800;
       color: #be185d;
-      margin-bottom: 4px;
+    }
+    .shape-desc {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 600;
     }
     .cell-svg {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-bottom: 6px;
+      margin: 4px 0;
       min-height: 28px;
     }
     .mini-stepper {
@@ -352,12 +356,13 @@
       border-radius: 8px;
       border: 1.5px solid #d8b4fe;
       overflow: hidden;
+      margin-top: 2px;
     }
     .mini-stepper button {
       background: transparent;
       border: none;
-      padding: 4px 10px;
-      font-size: 0.95rem;
+      padding: 5px 12px;
+      font-size: 1rem;
       font-weight: 800;
       color: var(--primary-dark);
       cursor: pointer;
@@ -370,9 +375,9 @@
       opacity: 0.35;
     }
     .mini-stepper span {
-      min-width: 24px;
+      min-width: 26px;
       text-align: center;
-      font-size: 0.88rem;
+      font-size: 0.92rem;
       font-weight: 800;
       color: var(--text);
     }
@@ -446,9 +451,28 @@
       </div>
     </div>
 
-    <!-- ② アガリ方 -->
+    <!-- ② リーチしましたか？ -->
+    <div class="question-block" id="riichiBlock">
+      <span class="q-label">② リーチしましたか？</span>
+      <div class="btn-group">
+        <button class="btn-toggle active" id="riichiNone" onclick="setRiichi('none')">なし</button>
+        <button class="btn-toggle" id="riichiNormal" onclick="setRiichi('riichi')">リーチ (1翻)</button>
+        <button class="btn-toggle" id="riichiDouble" onclick="setRiichi('double')">Wリーチ (2翻)</button>
+      </div>
+    </div>
+
+    <!-- ③ 一発であがりましたか？ -->
+    <div class="question-block" id="ippatsuBlock">
+      <span class="q-label">③ 一発であがりましたか？</span>
+      <div class="btn-group">
+        <button class="btn-toggle active" id="ippatsuNo" onclick="setIppatsu(false)">いいえ</button>
+        <button class="btn-toggle" id="ippatsuYes" onclick="setIppatsu(true)">はい (1翻)</button>
+      </div>
+    </div>
+
+    <!-- ④ アガリ方 -->
     <div class="question-block">
-      <span class="q-label">② アガリ方</span>
+      <span class="q-label">④ アガリ方</span>
       <div class="btn-group" style="margin-bottom:8px;">
         <button class="btn-toggle active" id="btnRon" onclick="setWinType('ron')">ロン</button>
         <button class="btn-toggle" id="btnTsumo" onclick="setWinType('tsumo')">ツモ</button>
@@ -459,25 +483,15 @@
       </div>
     </div>
 
-    <!-- ③ リーチ -->
-    <div class="question-block" id="riichiBlock">
-      <span class="q-label">③ リーチしましたか？</span>
-      <div class="btn-group">
-        <button class="btn-toggle active" id="riichiNone" onclick="setRiichi('none')">なし</button>
-        <button class="btn-toggle" id="riichiNormal" onclick="setRiichi('riichi')">リーチ (1翻)</button>
-        <button class="btn-toggle" id="riichiDouble" onclick="setRiichi('double')">Wリーチ (2翻)</button>
-      </div>
-    </div>
-
-    <!-- ④ 役の選択 -->
+    <!-- ⑤ 役 -->
     <div class="question-block">
-      <span class="q-label">④ ついている役を選んでください</span>
+      <span class="q-label">⑤ 役</span>
       <div class="yaku-grid" id="yakuContainer"></div>
     </div>
 
-    <!-- ⑤ ドラ -->
+    <!-- ⑥ ドラ -->
     <div class="question-block">
-      <span class="q-label">⑤ ドラ・裏ドラの合計枚数</span>
+      <span class="q-label">⑥ ドラ（ドラ・裏ドラの合計枚数）</span>
       <div class="stepper">
         <button onclick="changeDora(-1)">−</button>
         <span id="doraCount">0</span>
@@ -613,39 +627,10 @@
       </div>
     </div>
 
-    <!-- ④ 形 -->
+    <!-- ④ 形（横スクロール不要の2×2カード表示） -->
     <div class="question-block">
       <span class="q-label">④ 形</span>
-      <div class="shape-table-wrap">
-        <table class="shape-table">
-          <thead>
-            <tr>
-              <th></th>
-              <th>
-                <span class="th-sub">ポンして3枚</span>
-                <span class="th-ruby">ミンコウ</span>
-                <span class="th-main">明刻</span>
-              </th>
-              <th>
-                <span class="th-sub">自分で3枚</span>
-                <span class="th-ruby">アンコウ</span>
-                <span class="th-main">暗刻</span>
-              </th>
-              <th>
-                <span class="th-sub">人から貰って4枚</span>
-                <span class="th-ruby">ミンカン</span>
-                <span class="th-main">明槓</span>
-              </th>
-              <th>
-                <span class="th-sub">自分で4枚</span>
-                <span class="th-ruby">アンカン</span>
-                <span class="th-main">暗槓</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody id="shapeTableBody"></tbody>
-        </table>
-      </div>
+      <div id="shapeCardsContainer"></div>
     </div>
   </section>
 </div>
@@ -666,9 +651,10 @@
 // --- 状態管理 ---
 const state = {
   role: 'child',          // 'child' | 'dealer'
+  riichi: 'none',         // 'none' | 'riichi' | 'double'
+  ippatsu: false,         // true | false
   winType: 'ron',         // 'ron' | 'tsumo'
   menzen: true,           // true | false
-  riichi: 'none',         // 'none' | 'riichi' | 'double'
   selectedYaku: [],       // 役ID配列
   dora: 0,
   fuAgari: 'menzen_ron',  // 'none' | 'tsumo' | 'menzen_ron'
@@ -686,9 +672,8 @@ const state = {
   }
 };
 
-// 役マスター
+// 役マスター（一発は③へ移動したため除外）
 const YAKU_LIST = [
-  { id: 'ippatsu', name: '一発', han: 1, menzenOnly: true, requiresRiichi: true, excludes: [] },
   { id: 'pinfu', name: '平和 (ピンフ)', han: 1, menzenOnly: true, excludes: ['yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind', 'toitoi', 'sanankou', 'chiitoitsu'] },
   { id: 'tanyao', name: 'タンヤオ', han: 1, menzenOnly: false, excludes: ['yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind', 'honitsu', 'chinitsu', 'chanta', 'junchan', 'honroto'] },
   { id: 'yakuhai_haku', name: '役牌 (白)', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
@@ -707,15 +692,17 @@ const YAKU_LIST = [
   { id: 'chinitsu', name: '清一色', han: 6, menzenOnly: false, hanNaki: 5, excludes: ['tanyao', 'honitsu', 'chanta', 'yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind'] }
 ];
 
-// 形につく符の表データ
-const SHAPE_ROWS = [
+// 形につく符のデータ（イラストそのまま、スマホ2列表示対応）
+const SHAPE_GROUPS = [
   {
-    rowTitle: 'タンヤオ牌',
-    rowSub: '（中張牌：2〜8）',
+    groupTitle: 'タンヤオ牌',
+    groupSub: '（中張牌：2〜8）',
     isYaochu: false,
-    cells: [
+    items: [
       {
         key: 't_minko',
+        label: '明刻',
+        desc: 'ポンして3枚',
         fu: 2,
         svg: `<svg width="68" height="26" viewBox="0 0 68 26" aria-hidden="true">
           <rect x="2" y="8" width="22" height="16" rx="3" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.3"/>
@@ -728,6 +715,8 @@ const SHAPE_ROWS = [
       },
       {
         key: 't_anko',
+        label: '暗刻',
+        desc: '自分で3枚',
         fu: 4,
         svg: `<svg width="60" height="26" viewBox="0 0 60 26" aria-hidden="true">
           <rect x="2" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
@@ -740,6 +729,8 @@ const SHAPE_ROWS = [
       },
       {
         key: 't_minkan',
+        label: '明槓',
+        desc: '人から貰って4枚',
         fu: 8,
         svg: `<svg width="84" height="26" viewBox="0 0 84 26" aria-hidden="true">
           <rect x="2" y="8" width="21" height="16" rx="3" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.3"/>
@@ -754,6 +745,8 @@ const SHAPE_ROWS = [
       },
       {
         key: 't_ankan',
+        label: '暗槓',
+        desc: '自分で4枚',
         fu: 16,
         svg: `<svg width="80" height="26" viewBox="0 0 80 26" aria-hidden="true">
           <rect x="2" y="2" width="17" height="22" rx="3" fill="#d8b4fe" stroke="#9333ea" stroke-width="1.3"/>
@@ -767,12 +760,14 @@ const SHAPE_ROWS = [
     ]
   },
   {
-    rowTitle: '1・9・字牌',
-    rowSub: '（幺九牌）',
+    groupTitle: '1・9・字牌',
+    groupSub: '（幺九牌）',
     isYaochu: true,
-    cells: [
+    items: [
       {
         key: 'y_minko',
+        label: '明刻',
+        desc: 'ポンして3枚',
         fu: 4,
         svg: `<svg width="68" height="26" viewBox="0 0 68 26" aria-hidden="true">
           <rect x="2" y="8" width="22" height="16" rx="3" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.3"/>
@@ -785,6 +780,8 @@ const SHAPE_ROWS = [
       },
       {
         key: 'y_anko',
+        label: '暗刻',
+        desc: '自分で3枚',
         fu: 8,
         svg: `<svg width="60" height="26" viewBox="0 0 60 26" aria-hidden="true">
           <rect x="2" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
@@ -797,6 +794,8 @@ const SHAPE_ROWS = [
       },
       {
         key: 'y_minkan',
+        label: '明槓',
+        desc: '人から貰って4枚',
         fu: 16,
         svg: `<svg width="84" height="26" viewBox="0 0 84 26" aria-hidden="true">
           <rect x="2" y="8" width="21" height="16" rx="3" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.3"/>
@@ -811,6 +810,8 @@ const SHAPE_ROWS = [
       },
       {
         key: 'y_ankan',
+        label: '暗槓',
+        desc: '自分で4枚',
         fu: 32,
         svg: `<svg width="80" height="26" viewBox="0 0 80 26" aria-hidden="true">
           <rect x="2" y="2" width="17" height="22" rx="3" fill="#f9a8d4" stroke="#db2777" stroke-width="1.3"/>
@@ -828,7 +829,7 @@ const SHAPE_ROWS = [
 // --- 初期化 ---
 function init() {
   renderYakuGrid();
-  renderShapeTable();
+  renderShapeCards();
   syncFuAgariFromStep1();
   recalc();
 }
@@ -851,35 +852,45 @@ function renderYakuGrid() {
   });
 }
 
-// 形につく符テーブルの描画
-function renderShapeTable() {
-  const tbody = document.getElementById('shapeTableBody');
-  tbody.innerHTML = '';
+// 形につく符カードの描画（横スクロール不要）
+function renderShapeCards() {
+  const container = document.getElementById('shapeCardsContainer');
+  container.innerHTML = '';
 
-  SHAPE_ROWS.forEach(row => {
-    const tr = document.createElement('tr');
-    const th = document.createElement('th');
-    th.className = 'row-header';
-    th.innerHTML = `${row.rowTitle}<span class="row-header-sub">${row.rowSub}</span>`;
-    tr.appendChild(th);
+  SHAPE_GROUPS.forEach(group => {
+    const groupDiv = document.createElement('div');
+    groupDiv.className = 'shape-group';
 
-    row.cells.forEach(cell => {
-      const td = document.createElement('td');
-      td.className = 'shape-cell';
-      td.id = 'cell_' + cell.key;
-      td.innerHTML = `
-        <div class="cell-fu">${cell.fu}符</div>
-        <div class="cell-svg">${cell.svg}</div>
+    const header = document.createElement('div');
+    header.className = 'shape-group-header';
+    header.innerHTML = `<span>${group.groupTitle}</span><span class="shape-group-sub">${group.groupSub}</span>`;
+    groupDiv.appendChild(header);
+
+    const grid = document.createElement('div');
+    grid.className = 'shape-grid';
+
+    group.items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'shape-card';
+      card.id = 'card_' + item.key;
+      card.innerHTML = `
+        <div class="shape-card-top">
+          <span class="shape-type-name">${item.label}</span>
+          <span class="shape-fu-badge">${item.fu}符</span>
+        </div>
+        <div class="shape-desc">${item.desc}</div>
+        <div class="cell-svg">${item.svg}</div>
         <div class="mini-stepper">
-          <button id="dec_${cell.key}" onclick="changeShape('${cell.key}', -1)">−</button>
-          <span id="val_${cell.key}">0</span>
-          <button id="inc_${cell.key}" onclick="changeShape('${cell.key}', 1)">＋</button>
+          <button id="dec_${item.key}" onclick="changeShape('${item.key}', -1)">−</button>
+          <span id="val_${item.key}">0</span>
+          <button id="inc_${item.key}" onclick="changeShape('${item.key}', 1)">＋</button>
         </div>
       `;
-      tr.appendChild(td);
+      grid.appendChild(card);
     });
 
-    tbody.appendChild(tr);
+    groupDiv.appendChild(grid);
+    container.appendChild(groupDiv);
   });
 }
 
@@ -902,6 +913,21 @@ function setRole(role) {
   recalc();
 }
 
+function setRiichi(riichi) {
+  if (!state.menzen && riichi !== 'none') return;
+  state.riichi = riichi;
+  if (riichi === 'none') {
+    state.ippatsu = false;
+  }
+  recalc();
+}
+
+function setIppatsu(flag) {
+  if (state.riichi === 'none' && flag) return;
+  state.ippatsu = flag;
+  recalc();
+}
+
 function setWinType(winType) {
   state.winType = winType;
   document.getElementById('btnRon').classList.toggle('active', winType === 'ron');
@@ -915,19 +941,9 @@ function setMenzen(menzen) {
   document.getElementById('btnMenzen').classList.toggle('active', menzen);
   document.getElementById('btnNaki').classList.toggle('active', !menzen);
 
-  // 鳴きならリーチ・一発不可
-  const riichiBlock = document.getElementById('riichiBlock');
   if (!menzen) {
     state.riichi = 'none';
-    ['riichiNone', 'riichiNormal', 'riichiDouble'].forEach(id => {
-      document.getElementById(id).classList.remove('active');
-    });
-    document.getElementById('riichiNone').classList.add('active');
-    riichiBlock.style.opacity = '0.4';
-    riichiBlock.style.pointerEvents = 'none';
-  } else {
-    riichiBlock.style.opacity = '1';
-    riichiBlock.style.pointerEvents = 'auto';
+    state.ippatsu = false;
   }
 
   // 門前役の自動解除
@@ -938,20 +954,6 @@ function setMenzen(menzen) {
 
   syncFuAgariFromStep1();
   renderYakuGrid();
-  recalc();
-}
-
-function setRiichi(riichi) {
-  state.riichi = riichi;
-  ['riichiNone', 'riichiNormal', 'riichiDouble'].forEach(id => {
-    document.getElementById(id).classList.remove('active');
-  });
-  if (riichi === 'none') {
-    document.getElementById('riichiNone').classList.add('active');
-    state.selectedYaku = state.selectedYaku.filter(id => id !== 'ippatsu');
-  }
-  if (riichi === 'riichi') document.getElementById('riichiNormal').classList.add('active');
-  if (riichi === 'double') document.getElementById('riichiDouble').classList.add('active');
   recalc();
 }
 
@@ -1019,7 +1021,27 @@ function changeShape(key, delta) {
 
 // --- 排他ルールの判定とUI更新 ---
 function updateConstraints() {
-  // 役ボタンの状態更新
+  // ②リーチボタンの状態更新（副露時はリーチ不可）
+  const rNone = document.getElementById('riichiNone');
+  const rNormal = document.getElementById('riichiNormal');
+  const rDouble = document.getElementById('riichiDouble');
+  rNone.classList.toggle('active', state.riichi === 'none');
+  rNormal.classList.toggle('active', state.riichi === 'riichi');
+  rDouble.classList.toggle('active', state.riichi === 'double');
+  rNormal.disabled = !state.menzen;
+  rDouble.disabled = !state.menzen;
+
+  // ③一発ボタンの状態更新（リーチなし時は「はい」不可）
+  const ipNo = document.getElementById('ippatsuNo');
+  const ipYes = document.getElementById('ippatsuYes');
+  if (state.riichi === 'none') {
+    state.ippatsu = false;
+  }
+  ipNo.classList.toggle('active', !state.ippatsu);
+  ipYes.classList.toggle('active', state.ippatsu);
+  ipYes.disabled = (state.riichi === 'none');
+
+  // ⑤役ボタンの状態更新
   YAKU_LIST.forEach(yaku => {
     const btn = document.getElementById('yaku_' + yaku.id);
     if (!btn) return;
@@ -1030,7 +1052,6 @@ function updateConstraints() {
     let disabled = false;
 
     if (yaku.menzenOnly && !state.menzen) disabled = true;
-    if (yaku.requiresRiichi && state.riichi === 'none') disabled = true;
 
     state.selectedYaku.forEach(selectedId => {
       if (selectedId === yaku.id) return;
@@ -1070,24 +1091,24 @@ function updateConstraints() {
   headYakuhaiBtn.classList.toggle('active', state.headType === 'yakuhai');
   headRenpuBtn.classList.toggle('active', state.headType === 'renpu');
 
-  // STEP2 ④形テーブルのハイライト＆タンヤオ時の1・9・字牌無効化
-  SHAPE_ROWS.forEach(row => {
-    row.cells.forEach(cell => {
-      const td = document.getElementById('cell_' + cell.key);
-      const decBtn = document.getElementById('dec_' + cell.key);
-      const incBtn = document.getElementById('inc_' + cell.key);
-      const valSpan = document.getElementById('val_' + cell.key);
+  // STEP2 ④形カードのハイライト＆タンヤオ時の1・9・字牌無効化
+  SHAPE_GROUPS.forEach(group => {
+    group.items.forEach(item => {
+      const card = document.getElementById('card_' + item.key);
+      const decBtn = document.getElementById('dec_' + item.key);
+      const incBtn = document.getElementById('inc_' + item.key);
+      const valSpan = document.getElementById('val_' + item.key);
 
-      if (hasTanyao && row.isYaochu) {
-        state.shapes[cell.key] = 0;
+      if (hasTanyao && group.isYaochu) {
+        state.shapes[item.key] = 0;
         valSpan.innerText = '0';
-        td.classList.add('disabled-cell');
-        td.classList.remove('has-count');
+        card.classList.add('disabled-card');
+        card.classList.remove('has-count');
         decBtn.disabled = true;
         incBtn.disabled = true;
       } else {
-        td.classList.remove('disabled-cell');
-        td.classList.toggle('has-count', state.shapes[cell.key] > 0);
+        card.classList.remove('disabled-card');
+        card.classList.toggle('has-count', state.shapes[item.key] > 0);
         decBtn.disabled = false;
         incBtn.disabled = false;
       }
@@ -1103,6 +1124,7 @@ function recalc() {
   let han = 0;
   if (state.riichi === 'riichi') han += 1;
   if (state.riichi === 'double') han += 2;
+  if (state.ippatsu) han += 1;
 
   state.selectedYaku.forEach(id => {
     const y = YAKU_LIST.find(item => item.id === id);
