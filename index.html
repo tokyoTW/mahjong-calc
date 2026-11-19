@@ -29,7 +29,7 @@
       color: var(--text);
       line-height: 1.5;
       padding: 16px;
-      padding-bottom: 120px;
+      padding-bottom: 140px;
     }
 
     .container {
@@ -414,55 +414,68 @@
       padding: 12px 16px;
       box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.25);
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
+      flex-direction: column;
+      gap: 8px;
       z-index: 100;
+    }
+    .result-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
     }
     .result-info {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 3px;
       min-width: 0;
     }
     .result-meta {
-      font-size: 0.86rem;
+      font-size: 0.88rem;
       color: #7e22ce;
       font-weight: 800;
     }
-    .result-fu-live {
-      font-size: 0.82rem;
-      color: #be185d;
-      font-weight: 800;
-      background: rgba(255, 255, 255, 0.72);
-      border: 1px solid #f5d0fe;
-      border-radius: 6px;
-      padding: 2px 8px;
-      display: inline-block;
-      width: fit-content;
-      margin: 2px 0;
-    }
     .result-yomi {
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       color: #9d174d;
       font-weight: 600;
     }
     .result-right {
       flex-shrink: 0;
       text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+    /* 右上に黒字・少し小さめで符を表示 */
+    .result-fu-live {
+      font-size: 0.72rem;
+      color: #111827;
+      font-weight: 700;
+      line-height: 1.2;
     }
     .result-score {
       font-size: 1.55rem;
       font-weight: 800;
       color: #6b21a8;
       letter-spacing: 0.5px;
-      line-height: 1.2;
+      line-height: 1.15;
     }
     .result-breakdown {
-      font-size: 0.73rem;
+      font-size: 0.72rem;
       color: #7c688a;
       font-weight: 600;
-      margin-top: 2px;
+    }
+    /* 選択内容の小テキスト表示エリア */
+    .result-selected {
+      font-size: 0.73rem;
+      color: #374151;
+      font-weight: 600;
+      line-height: 1.4;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(168, 85, 247, 0.35);
+      word-break: break-word;
     }
   </style>
 </head>
@@ -687,17 +700,20 @@
   </section>
 </div>
 
-<!-- 画面下の結果バー（リアルタイム符＆点数表示） -->
+<!-- 画面下の結果バー -->
 <div class="result-bar">
-  <div class="result-info">
-    <div class="result-meta" id="resMeta">子 ／ 役なし</div>
-    <div class="result-fu-live" id="resFuLive">計 30符 ➔ 30符</div>
-    <div class="result-yomi" id="resYomi">アガれません</div>
+  <div class="result-main">
+    <div class="result-info">
+      <div class="result-meta" id="resMeta">子 ／ 役なし</div>
+      <div class="result-yomi" id="resYomi">アガれません</div>
+    </div>
+    <div class="result-right">
+      <div class="result-fu-live" id="resFuLive">符：計 30符 ➔ 30符</div>
+      <div class="result-score" id="resScore">0 点</div>
+      <div class="result-breakdown" id="resBreakdown">役を1つ以上選択してください</div>
+    </div>
   </div>
-  <div class="result-right">
-    <div class="result-score" id="resScore">0 点</div>
-    <div class="result-breakdown" id="resBreakdown">役を1つ以上選択してください</div>
-  </div>
+  <div class="result-selected" id="resSelected">メンゼンロン</div>
 </div>
 
 <script>
@@ -726,24 +742,24 @@ const state = {
   }
 };
 
-// 役マスター
+// 役マスター（結果窓の短縮表示用 shortName を追加）
 const YAKU_LIST = [
-  { id: 'pinfu', name: '平和 (ピンフ)', han: 1, menzenOnly: true, excludes: ['yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind', 'toitoi', 'sanankou', 'chiitoitsu'] },
-  { id: 'tanyao', name: 'タンヤオ', han: 1, menzenOnly: false, excludes: ['yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind', 'honitsu', 'chinitsu', 'chanta', 'junchan', 'honroto'] },
-  { id: 'yakuhai_haku', name: '役牌 (白)', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
-  { id: 'yakuhai_hatsu', name: '役牌 (發)', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
-  { id: 'yakuhai_chun', name: '役牌 (中)', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
-  { id: 'yakuhai_wind', name: '役牌 (自風／場風)', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
-  { id: 'iipeikou', name: '一盃口', han: 1, menzenOnly: true, excludes: ['chiitoitsu', 'toitoi'] },
-  { id: 'chiitoitsu', name: '七対子', han: 2, menzenOnly: true, excludes: ['pinfu', 'iipeikou', 'toitoi', 'sanankou'] },
-  { id: 'toitoi', name: '対々和 (トイトイ)', han: 2, menzenOnly: false, excludes: ['pinfu', 'chiitoitsu', 'iipeikou'] },
-  { id: 'sanankou', name: '三暗刻', han: 2, menzenOnly: false, excludes: ['pinfu', 'chiitoitsu'] },
-  { id: 'sanshoku', name: '三色同順', han: 2, menzenOnly: false, hanNaki: 1, excludes: ['chiitoitsu'] },
-  { id: 'ittsu', name: '一気通貫', han: 2, menzenOnly: false, hanNaki: 1, excludes: ['tanyao', 'chiitoitsu'] },
-  { id: 'chanta', name: 'チャンタ', han: 2, menzenOnly: false, hanNaki: 1, excludes: ['tanyao', 'junchan', 'chinitsu'] },
-  { id: 'junchan', name: '純チャン', han: 3, menzenOnly: false, hanNaki: 2, excludes: ['tanyao', 'chanta', 'yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind', 'honitsu'] },
-  { id: 'honitsu', name: '混一色', han: 3, menzenOnly: false, hanNaki: 2, excludes: ['tanyao', 'chinitsu', 'junchan'] },
-  { id: 'chinitsu', name: '清一色', han: 6, menzenOnly: false, hanNaki: 5, excludes: ['tanyao', 'honitsu', 'chanta', 'yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind'] }
+  { id: 'pinfu', name: '平和 (ピンフ)', shortName: 'ピンフ', han: 1, menzenOnly: true, excludes: ['yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind', 'toitoi', 'sanankou', 'chiitoitsu'] },
+  { id: 'tanyao', name: 'タンヤオ', shortName: 'タンヤオ', han: 1, menzenOnly: false, excludes: ['yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind', 'honitsu', 'chinitsu', 'chanta', 'junchan', 'honroto'] },
+  { id: 'yakuhai_haku', name: '役牌 (白)', shortName: '白', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
+  { id: 'yakuhai_hatsu', name: '役牌 (發)', shortName: '發', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
+  { id: 'yakuhai_chun', name: '役牌 (中)', shortName: '中', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
+  { id: 'yakuhai_wind', name: '役牌 (自風／場風)', shortName: '役牌(風)', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
+  { id: 'iipeikou', name: '一盃口', shortName: '一盃口', han: 1, menzenOnly: true, excludes: ['chiitoitsu', 'toitoi'] },
+  { id: 'chiitoitsu', name: '七対子', shortName: '七対子', han: 2, menzenOnly: true, excludes: ['pinfu', 'iipeikou', 'toitoi', 'sanankou'] },
+  { id: 'toitoi', name: '対々和 (トイトイ)', shortName: 'トイトイ', han: 2, menzenOnly: false, excludes: ['pinfu', 'chiitoitsu', 'iipeikou'] },
+  { id: 'sanankou', name: '三暗刻', shortName: '三暗刻', han: 2, menzenOnly: false, excludes: ['pinfu', 'chiitoitsu'] },
+  { id: 'sanshoku', name: '三色同順', shortName: '三色同順', han: 2, menzenOnly: false, hanNaki: 1, excludes: ['chiitoitsu'] },
+  { id: 'ittsu', name: '一気通貫', shortName: '一気通貫', han: 2, menzenOnly: false, hanNaki: 1, excludes: ['tanyao', 'chiitoitsu'] },
+  { id: 'chanta', name: 'チャンタ', shortName: 'チャンタ', han: 2, menzenOnly: false, hanNaki: 1, excludes: ['tanyao', 'junchan', 'chinitsu'] },
+  { id: 'junchan', name: '純チャン', shortName: '純チャン', han: 3, menzenOnly: false, hanNaki: 2, excludes: ['tanyao', 'chanta', 'yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind', 'honitsu'] },
+  { id: 'honitsu', name: '混一色', shortName: '混一色', han: 3, menzenOnly: false, hanNaki: 2, excludes: ['tanyao', 'chinitsu', 'junchan'] },
+  { id: 'chinitsu', name: '清一色', shortName: '清一色', han: 6, menzenOnly: false, hanNaki: 5, excludes: ['tanyao', 'honitsu', 'chanta', 'yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind'] }
 ];
 
 // 形につく符のデータ（kind: 'minko' | 'anko' | 'minkan' | 'ankan'）
@@ -1087,6 +1103,30 @@ function changeShape(key, delta) {
   recalc();
 }
 
+// --- 選択内容のテキスト組み立て ---
+function buildSelectedSummary() {
+  const parts = [];
+
+  if (state.riichi === 'riichi') parts.push('リーチ');
+  if (state.riichi === 'double') parts.push('Wリーチ');
+  if (state.ippatsu) parts.push('一発');
+
+  if (state.menzen && state.winType === 'ron') parts.push('メンゼンロン');
+  if (state.menzen && state.winType === 'tsumo') parts.push('メンゼンツモ');
+  if (!state.menzen && state.winType === 'ron') parts.push('副露ロン');
+  if (!state.menzen && state.winType === 'tsumo') parts.push('副露ツモ');
+
+  state.selectedYaku.forEach(id => {
+    const y = YAKU_LIST.find(item => item.id === id);
+    if (y) parts.push(y.shortName || y.name);
+  });
+
+  if (state.dora > 0) parts.push(`ドラ${state.dora}`);
+  if (state.honba > 0) parts.push(`${state.honba}本場`);
+
+  return parts.join('・');
+}
+
 // --- 排他ルールの判定とUI更新 ---
 function updateConstraints() {
   // ②リーチボタンの状態更新（副露時はリーチ不可）
@@ -1169,9 +1209,6 @@ function updateConstraints() {
   headRenpuBtn.classList.toggle('active', state.headType === 'renpu');
 
   // STEP2 ④形カードのグレーアウト連動
-  // ・タンヤオ成立時：1・9・字牌は不可
-  // ・門前＋ロン時：明槓は不可（明刻はシャンポン待ちロン用に選択可）
-  // ・門前＋ツモ時：明刻・明槓ともに不可
   SHAPE_GROUPS.forEach(group => {
     group.items.forEach(item => {
       const card = document.getElementById('card_' + item.key);
@@ -1238,15 +1275,15 @@ function recalc() {
   } else if (hasChiitoi) {
     finalFu = 25;
     skipReason = '七対子（チートイツ）は <strong>25符固定</strong> です。符計算は不要です。';
-    fuLiveText = '25符（七対子固定）';
+    fuLiveText = '符：25符固定';
   } else if (hasPinfu && state.winType === 'tsumo') {
     finalFu = 20;
     skipReason = '門前平和ツモは特例により <strong>20符固定</strong> です。符計算は不要です。';
-    fuLiveText = '20符（平和ツモ固定）';
+    fuLiveText = '符：20符固定';
   } else if (hasPinfu && state.winType === 'ron') {
     finalFu = 30;
     skipReason = '門前平和ロンは <strong>30符固定</strong> です。符計算は不要です。';
-    fuLiveText = '30符（平和ロン固定）';
+    fuLiveText = '符：30符固定';
   }
 
   if (skipReason) {
@@ -1385,9 +1422,11 @@ function updateResult(han, fu, fuLiveText) {
   const yomiEl = document.getElementById('resYomi');
   const scoreEl = document.getElementById('resScore');
   const breakEl = document.getElementById('resBreakdown');
+  const selectedEl = document.getElementById('resSelected');
 
-  // 符のリアルタイム表示は常に更新
+  // 符と選択内容のリアルタイム表示は常に更新
   fuLiveEl.innerText = fuLiveText;
+  selectedEl.innerText = buildSelectedSummary();
 
   const honbaTag = state.honba > 0 ? ` ／ ${state.honba}本場` : '';
   const honbaRonAdd = state.honba * 300;
