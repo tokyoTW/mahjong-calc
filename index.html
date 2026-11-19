@@ -29,7 +29,7 @@
       color: var(--text);
       line-height: 1.5;
       padding: 16px;
-      padding-bottom: 100px;
+      padding-bottom: 120px;
     }
 
     .container {
@@ -215,7 +215,13 @@
       text-decoration: line-through;
     }
 
-    /* ステッパー */
+    /* ステッパー（ドラ・本場用） */
+    .stepper-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
     .stepper {
       display: inline-flex;
       align-items: center;
@@ -228,9 +234,9 @@
     .stepper button {
       background: transparent;
       border: none;
-      padding: 8px 14px;
-      font-size: 1.1rem;
-      font-weight: 700;
+      padding: 10px 18px;
+      font-size: 1.2rem;
+      font-weight: 800;
       color: var(--primary-dark);
       cursor: pointer;
     }
@@ -242,11 +248,16 @@
       cursor: not-allowed;
     }
     .stepper span {
-      min-width: 34px;
+      min-width: 40px;
       text-align: center;
-      font-weight: 700;
-      font-size: 1rem;
+      font-weight: 800;
+      font-size: 1.05rem;
       color: var(--text);
+    }
+    .stepper-hint {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 600;
     }
 
     /* スキップ案内通知 */
@@ -292,9 +303,9 @@
     .shape-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
+      gap: 10px;
     }
-    @media (min-width: 600px) {
+    @media (min-width: 640px) {
       .shape-grid {
         grid-template-columns: repeat(4, 1fr);
       }
@@ -302,13 +313,13 @@
     .shape-card {
       background: #ffffff;
       border: 1.5px solid #eadbf5;
-      border-radius: 10px;
-      padding: 10px 6px;
+      border-radius: 12px;
+      padding: 10px 8px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 4px;
+      gap: 5px;
       transition: all 0.15s ease;
     }
     .shape-card.has-count {
@@ -328,12 +339,12 @@
       flex-wrap: wrap;
     }
     .shape-type-name {
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       font-weight: 800;
       color: #581c87;
     }
     .shape-fu-badge {
-      font-size: 0.85rem;
+      font-size: 0.86rem;
       font-weight: 800;
       color: #be185d;
     }
@@ -349,35 +360,45 @@
       margin: 4px 0;
       min-height: 28px;
     }
-    .mini-stepper {
-      display: inline-flex;
+
+    /* スマホでタップしやすい大きめステッパー */
+    .shape-stepper {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
+      width: 100%;
       background: #faf5ff;
-      border-radius: 8px;
+      border-radius: 10px;
       border: 1.5px solid #d8b4fe;
       overflow: hidden;
-      margin-top: 2px;
+      margin-top: 4px;
     }
-    .mini-stepper button {
-      background: transparent;
+    .shape-stepper button {
+      background: #f3e8ff;
       border: none;
-      padding: 5px 12px;
-      font-size: 1rem;
+      min-height: 44px;
+      font-size: 1.35rem;
       font-weight: 800;
       color: var(--primary-dark);
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+      transition: background 0.12s ease;
     }
-    .mini-stepper button:hover:not(:disabled) {
-      background: #f3e8ff;
+    .shape-stepper button:active:not(:disabled) {
+      background: #e9d5ff;
     }
-    .mini-stepper button:disabled {
+    .shape-stepper button:disabled {
       cursor: not-allowed;
       opacity: 0.35;
     }
-    .mini-stepper span {
-      min-width: 26px;
+    .shape-stepper span {
+      min-width: 32px;
+      padding: 0 4px;
       text-align: center;
-      font-size: 0.92rem;
+      font-size: 1.05rem;
       font-weight: 800;
       color: var(--text);
     }
@@ -390,41 +411,58 @@
       color: #4c1d95;
       border: 2px solid #d8b4fe;
       border-radius: 16px;
-      padding: 14px 20px;
-      box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.22);
+      padding: 12px 16px;
+      box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.25);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       z-index: 100;
     }
     .result-info {
       display: flex;
       flex-direction: column;
       gap: 2px;
+      min-width: 0;
     }
     .result-meta {
-      font-size: 0.85rem;
+      font-size: 0.86rem;
       color: #7e22ce;
-      font-weight: 700;
+      font-weight: 800;
+    }
+    .result-fu-live {
+      font-size: 0.82rem;
+      color: #be185d;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid #f5d0fe;
+      border-radius: 6px;
+      padding: 2px 8px;
+      display: inline-block;
+      width: fit-content;
+      margin: 2px 0;
     }
     .result-yomi {
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: #9d174d;
       font-weight: 600;
     }
+    .result-right {
+      flex-shrink: 0;
+      text-align: right;
+    }
     .result-score {
-      font-size: 1.6rem;
+      font-size: 1.55rem;
       font-weight: 800;
       color: #6b21a8;
       letter-spacing: 0.5px;
-      text-align: right;
+      line-height: 1.2;
     }
     .result-breakdown {
-      font-size: 0.74rem;
+      font-size: 0.73rem;
       color: #7c688a;
-      text-align: right;
       font-weight: 600;
+      margin-top: 2px;
     }
   </style>
 </head>
@@ -492,10 +530,25 @@
     <!-- ⑥ ドラ -->
     <div class="question-block">
       <span class="q-label">⑥ ドラ（ドラ・裏ドラの合計枚数）</span>
-      <div class="stepper">
-        <button onclick="changeDora(-1)">−</button>
-        <span id="doraCount">0</span>
-        <button onclick="changeDora(1)">＋</button>
+      <div class="stepper-row">
+        <div class="stepper">
+          <button onclick="changeDora(-1)">−</button>
+          <span id="doraCount">0</span>
+          <button onclick="changeDora(1)">＋</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑦ 本場（積み棒） -->
+    <div class="question-block">
+      <span class="q-label">⑦ 本場（積み棒）</span>
+      <div class="stepper-row">
+        <div class="stepper">
+          <button onclick="changeHonba(-1)">−</button>
+          <span id="honbaCount">0</span>
+          <button onclick="changeHonba(1)">＋</button>
+        </div>
+        <span class="stepper-hint" id="honbaHint">0本場（＋0点）</span>
       </div>
     </div>
 
@@ -506,8 +559,7 @@
   <!-- 第2フェーズ：符の確定（必要な場合のみ表示） -->
   <section class="card" id="fuSection">
     <div class="card-title">
-      <span><span class="step-badge">STEP 2</span>符の計算（基本符20符＋以下を加算）</span>
-      <span id="fuSummary" style="font-size:0.92rem; color:#be185d;">計 30符 ➔ 30符</span>
+      <span><span class="step-badge">STEP 2</span>符の計算</span>
     </div>
 
     <!-- ① アガリ方 -->
@@ -627,7 +679,7 @@
       </div>
     </div>
 
-    <!-- ④ 形（横スクロール不要の2×2カード表示） -->
+    <!-- ④ 形（横スクロール不要＆大きめボタン） -->
     <div class="question-block">
       <span class="q-label">④ 形</span>
       <div id="shapeCardsContainer"></div>
@@ -635,13 +687,14 @@
   </section>
 </div>
 
-<!-- 画面下の結果バー -->
+<!-- 画面下の結果バー（リアルタイム符＆点数表示） -->
 <div class="result-bar">
   <div class="result-info">
     <div class="result-meta" id="resMeta">子 ／ 役なし</div>
+    <div class="result-fu-live" id="resFuLive">計 30符 ➔ 30符</div>
     <div class="result-yomi" id="resYomi">アガれません</div>
   </div>
-  <div>
+  <div class="result-right">
     <div class="result-score" id="resScore">0 点</div>
     <div class="result-breakdown" id="resBreakdown">役を1つ以上選択してください</div>
   </div>
@@ -657,6 +710,7 @@ const state = {
   menzen: true,           // true | false
   selectedYaku: [],       // 役ID配列
   dora: 0,
+  honba: 0,               // 本場（積み棒）
   fuAgari: 'menzen_ron',  // 'none' | 'tsumo' | 'menzen_ron'
   waitType: 'ryanmen',    // 'ryanmen' | 'kanchan' | 'penchan' | 'tanki'
   headType: 'none',       // 'none' | 'yakuhai' | 'renpu'
@@ -672,7 +726,7 @@ const state = {
   }
 };
 
-// 役マスター（一発は③へ移動したため除外）
+// 役マスター
 const YAKU_LIST = [
   { id: 'pinfu', name: '平和 (ピンフ)', han: 1, menzenOnly: true, excludes: ['yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind', 'toitoi', 'sanankou', 'chiitoitsu'] },
   { id: 'tanyao', name: 'タンヤオ', han: 1, menzenOnly: false, excludes: ['yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind', 'honitsu', 'chinitsu', 'chanta', 'junchan', 'honroto'] },
@@ -692,7 +746,7 @@ const YAKU_LIST = [
   { id: 'chinitsu', name: '清一色', han: 6, menzenOnly: false, hanNaki: 5, excludes: ['tanyao', 'honitsu', 'chanta', 'yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind'] }
 ];
 
-// 形につく符のデータ（イラストそのまま、スマホ2列表示対応）
+// 形につく符のデータ（kind: 'minko' | 'anko' | 'minkan' | 'ankan'）
 const SHAPE_GROUPS = [
   {
     groupTitle: 'タンヤオ牌',
@@ -701,6 +755,7 @@ const SHAPE_GROUPS = [
     items: [
       {
         key: 't_minko',
+        kind: 'minko',
         label: '明刻',
         desc: 'ポンして3枚',
         fu: 2,
@@ -715,6 +770,7 @@ const SHAPE_GROUPS = [
       },
       {
         key: 't_anko',
+        kind: 'anko',
         label: '暗刻',
         desc: '自分で3枚',
         fu: 4,
@@ -729,6 +785,7 @@ const SHAPE_GROUPS = [
       },
       {
         key: 't_minkan',
+        kind: 'minkan',
         label: '明槓',
         desc: '人から貰って4枚',
         fu: 8,
@@ -745,6 +802,7 @@ const SHAPE_GROUPS = [
       },
       {
         key: 't_ankan',
+        kind: 'ankan',
         label: '暗槓',
         desc: '自分で4枚',
         fu: 16,
@@ -766,6 +824,7 @@ const SHAPE_GROUPS = [
     items: [
       {
         key: 'y_minko',
+        kind: 'minko',
         label: '明刻',
         desc: 'ポンして3枚',
         fu: 4,
@@ -780,6 +839,7 @@ const SHAPE_GROUPS = [
       },
       {
         key: 'y_anko',
+        kind: 'anko',
         label: '暗刻',
         desc: '自分で3枚',
         fu: 8,
@@ -794,6 +854,7 @@ const SHAPE_GROUPS = [
       },
       {
         key: 'y_minkan',
+        kind: 'minkan',
         label: '明槓',
         desc: '人から貰って4枚',
         fu: 16,
@@ -810,6 +871,7 @@ const SHAPE_GROUPS = [
       },
       {
         key: 'y_ankan',
+        kind: 'ankan',
         label: '暗槓',
         desc: '自分で4枚',
         fu: 32,
@@ -852,7 +914,7 @@ function renderYakuGrid() {
   });
 }
 
-// 形につく符カードの描画（横スクロール不要）
+// 形につく符カードの描画
 function renderShapeCards() {
   const container = document.getElementById('shapeCardsContainer');
   container.innerHTML = '';
@@ -880,7 +942,7 @@ function renderShapeCards() {
         </div>
         <div class="shape-desc">${item.desc}</div>
         <div class="cell-svg">${item.svg}</div>
-        <div class="mini-stepper">
+        <div class="shape-stepper">
           <button id="dec_${item.key}" onclick="changeShape('${item.key}', -1)">−</button>
           <span id="val_${item.key}">0</span>
           <button id="inc_${item.key}" onclick="changeShape('${item.key}', 1)">＋</button>
@@ -982,6 +1044,12 @@ function changeDora(delta) {
   recalc();
 }
 
+function changeHonba(delta) {
+  state.honba = Math.max(0, Math.min(20, state.honba + delta));
+  document.getElementById('honbaCount').innerText = state.honba;
+  recalc();
+}
+
 function toggleFuAgari(type) {
   if (type === 'menzen_ron' && !state.menzen) return;
   if (state.fuAgari === type) {
@@ -1063,6 +1131,15 @@ function updateConstraints() {
     btn.disabled = disabled;
   });
 
+  // ⑦本場の補足表示
+  const honbaBonus = state.honba * 300;
+  const honbaEach = state.honba * 100;
+  document.getElementById('honbaHint').innerText = state.honba === 0
+    ? '0本場（＋0点）'
+    : (state.winType === 'ron'
+      ? `${state.honba}本場（ロン ＋${honbaBonus.toLocaleString()}点）`
+      : `${state.honba}本場（ツモ 各＋${honbaEach.toLocaleString()}点）`);
+
   // STEP2 ①アガリ方の状態・副露時の面前ロン無効化
   const btnFuTsumo = document.getElementById('fuAgariTsumo');
   const btnFuMenzenRon = document.getElementById('fuAgariMenzenRon');
@@ -1091,7 +1168,10 @@ function updateConstraints() {
   headYakuhaiBtn.classList.toggle('active', state.headType === 'yakuhai');
   headRenpuBtn.classList.toggle('active', state.headType === 'renpu');
 
-  // STEP2 ④形カードのハイライト＆タンヤオ時の1・9・字牌無効化
+  // STEP2 ④形カードのグレーアウト連動
+  // ・タンヤオ成立時：1・9・字牌は不可
+  // ・門前＋ロン時：明槓は不可（明刻はシャンポン待ちロン用に選択可）
+  // ・門前＋ツモ時：明刻・明槓ともに不可
   SHAPE_GROUPS.forEach(group => {
     group.items.forEach(item => {
       const card = document.getElementById('card_' + item.key);
@@ -1099,7 +1179,12 @@ function updateConstraints() {
       const incBtn = document.getElementById('inc_' + item.key);
       const valSpan = document.getElementById('val_' + item.key);
 
-      if (hasTanyao && group.isYaochu) {
+      let disabled = false;
+      if (hasTanyao && group.isYaochu) disabled = true;
+      if (state.menzen && item.kind === 'minkan') disabled = true;
+      if (state.menzen && state.winType === 'tsumo' && item.kind === 'minko') disabled = true;
+
+      if (disabled) {
         state.shapes[item.key] = 0;
         valSpan.innerText = '0';
         card.classList.add('disabled-card');
@@ -1141,6 +1226,7 @@ function recalc() {
   const fuSection = document.getElementById('fuSection');
   const skipMessage = document.getElementById('skipMessage');
   let finalFu = 30;
+  let fuLiveText = '';
   let skipReason = '';
 
   const hasPinfu = state.selectedYaku.includes('pinfu');
@@ -1148,15 +1234,19 @@ function recalc() {
 
   if (han >= 5) {
     skipReason = `🎉 <strong>${han}翻で満貫以上確定！</strong> 符に関係なく点数が決まるため、符計算は不要です。`;
+    fuLiveText = '符計算不要（満貫以上）';
   } else if (hasChiitoi) {
     finalFu = 25;
     skipReason = '七対子（チートイツ）は <strong>25符固定</strong> です。符計算は不要です。';
+    fuLiveText = '25符（七対子固定）';
   } else if (hasPinfu && state.winType === 'tsumo') {
     finalFu = 20;
     skipReason = '門前平和ツモは特例により <strong>20符固定</strong> です。符計算は不要です。';
+    fuLiveText = '20符（平和ツモ固定）';
   } else if (hasPinfu && state.winType === 'ron') {
     finalFu = 30;
     skipReason = '門前平和ロンは <strong>30符固定</strong> です。符計算は不要です。';
+    fuLiveText = '30符（平和ロン固定）';
   }
 
   if (skipReason) {
@@ -1192,46 +1282,120 @@ function recalc() {
     }
     if (finalFu < 30 && !hasChiitoi) finalFu = 30;
 
-    document.getElementById('fuSummary').innerText = `計 ${rawFu}符 ➔ ${finalFu}符`;
+    fuLiveText = `符：計 ${rawFu}符 ➔ ${finalFu}符`;
   }
 
   // 3. 点数算出と表示更新
-  updateResult(han, finalFu);
+  updateResult(han, finalFu, fuLiveText);
 }
 
-// 点数計算テーブル（1〜4翻・全スラッシュ全角）
+// 点数計算テーブル（数値ベース：本場加算に対応）
 const SCORE_DATA = {
   child: {
-    20: { 2: { tsumo: '400・700', yomi: 'ヨンヒャク・ナナヒャク' }, 3: { tsumo: '700・1300', yomi: 'ナナヒャク・センサンビャク' }, 4: { tsumo: '1300・2600', yomi: 'センサンビャク・ニセンロッピャク' } },
-    25: { 2: { ron: 1600, yomi: 'イチロク' }, 3: { ron: 3200, tsumo: '800・1600', yomi: 'ザンニ ／ ハッピャク・イチロク' }, 4: { ron: 6400, tsumo: '1600・3200', yomi: 'ロクヨン ／ イチロク・ザンニ' } },
-    30: { 1: { ron: 1000, tsumo: '300・500', yomi: 'セン ／ サンビャク・ゴヒャク' }, 2: { ron: 2000, tsumo: '500・1000', yomi: 'ニセン ／ ゴヒャク・セン' }, 3: { ron: 3900, tsumo: '1000・2000', yomi: 'サンキュウ ／ セン・ニセン' }, 4: { ron: 7700, tsumo: '2000・3900', yomi: 'ナナナナ ／ ニセン・サンキュウ' } },
-    40: { 1: { ron: 1300, tsumo: '400・700', yomi: 'センサン ／ ヨンヒャク・ナナヒャク' }, 2: { ron: 2600, tsumo: '700・1300', yomi: 'ニーロク ／ ナナヒャク・センサン' }, 3: { ron: 5200, tsumo: '1300・2600', yomi: 'ゴニ ／ センサン・ニーロク' }, 4: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン ／ ニセン・ヨンセン' } },
-    50: { 1: { ron: 1600, tsumo: '400・800', yomi: 'イチロク ／ ヨンヒャク・ハッピャク' }, 2: { ron: 3200, tsumo: '800・1600', yomi: 'ザンニ ／ ハッピャク・イチロク' }, 3: { ron: 6400, tsumo: '1600・3200', yomi: 'ロクヨン ／ イチロク・ザンニ' }, 4: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン ／ ニセン・ヨンセン' } },
-    60: { 1: { ron: 2000, tsumo: '500・1000', yomi: 'ニセン ／ ゴヒャク・セン' }, 2: { ron: 3900, tsumo: '1000・2000', yomi: 'サンキュウ ／ セン・ニセン' }, 3: { ron: 7700, tsumo: '2000・3900', yomi: 'ナナナナ ／ ニセン・サンキュウ' }, 4: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン ／ ニセン・ヨンセン' } },
-    70: { 1: { ron: 2300, tsumo: '600・1200', yomi: 'ニーサン ／ ロッピャク・センニ' }, 2: { ron: 4500, tsumo: '1200・2300', yomi: 'ヨンゴー ／ センニ・ニーサン' }, 3: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン ／ ニセン・ヨンセン' }, 4: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン ／ ニセン・ヨンセン' } }
+    20: {
+      2: { tsumo: [400, 700], yomi: 'ヨンヒャク・ナナヒャク' },
+      3: { tsumo: [700, 1300], yomi: 'ナナヒャク・センサンビャク' },
+      4: { tsumo: [1300, 2600], yomi: 'センサンビャク・ニセンロッピャク' }
+    },
+    25: {
+      2: { ron: 1600, yomi: 'イチロク' },
+      3: { ron: 3200, tsumo: [800, 1600], yomiRon: 'ザンニ', yomiTsumo: 'ハッピャク・イチロク' },
+      4: { ron: 6400, tsumo: [1600, 3200], yomiRon: 'ロクヨン', yomiTsumo: 'イチロク・ザンニ' }
+    },
+    30: {
+      1: { ron: 1000, tsumo: [300, 500], yomiRon: 'セン', yomiTsumo: 'サンビャク・ゴヒャク' },
+      2: { ron: 2000, tsumo: [500, 1000], yomiRon: 'ニセン', yomiTsumo: 'ゴヒャク・セン' },
+      3: { ron: 3900, tsumo: [1000, 2000], yomiRon: 'サンキュウ', yomiTsumo: 'セン・ニセン' },
+      4: { ron: 7700, tsumo: [2000, 3900], yomiRon: 'ナナナナ', yomiTsumo: 'ニセン・サンキュウ' }
+    },
+    40: {
+      1: { ron: 1300, tsumo: [400, 700], yomiRon: 'センサン', yomiTsumo: 'ヨンヒャク・ナナヒャク' },
+      2: { ron: 2600, tsumo: [700, 1300], yomiRon: 'ニーロク', yomiTsumo: 'ナナヒャク・センサン' },
+      3: { ron: 5200, tsumo: [1300, 2600], yomiRon: 'ゴニ', yomiTsumo: 'センサン・ニーロク' },
+      4: { ron: 8000, tsumo: [2000, 4000], yomiRon: 'マンガン', yomiTsumo: 'ニセン・ヨンセン' }
+    },
+    50: {
+      1: { ron: 1600, tsumo: [400, 800], yomiRon: 'イチロク', yomiTsumo: 'ヨンヒャク・ハッピャク' },
+      2: { ron: 3200, tsumo: [800, 1600], yomiRon: 'ザンニ', yomiTsumo: 'ハッピャク・イチロク' },
+      3: { ron: 6400, tsumo: [1600, 3200], yomiRon: 'ロクヨン', yomiTsumo: 'イチロク・ザンニ' },
+      4: { ron: 8000, tsumo: [2000, 4000], yomiRon: 'マンガン', yomiTsumo: 'ニセン・ヨンセン' }
+    },
+    60: {
+      1: { ron: 2000, tsumo: [500, 1000], yomiRon: 'ニセン', yomiTsumo: 'ゴヒャク・セン' },
+      2: { ron: 3900, tsumo: [1000, 2000], yomiRon: 'サンキュウ', yomiTsumo: 'セン・ニセン' },
+      3: { ron: 7700, tsumo: [2000, 3900], yomiRon: 'ナナナナ', yomiTsumo: 'ニセン・サンキュウ' },
+      4: { ron: 8000, tsumo: [2000, 4000], yomiRon: 'マンガン', yomiTsumo: 'ニセン・ヨンセン' }
+    },
+    70: {
+      1: { ron: 2300, tsumo: [600, 1200], yomiRon: 'ニーサン', yomiTsumo: 'ロッピャク・センニ' },
+      2: { ron: 4500, tsumo: [1200, 2300], yomiRon: 'ヨンゴー', yomiTsumo: 'センニ・ニーサン' },
+      3: { ron: 8000, tsumo: [2000, 4000], yomiRon: 'マンガン', yomiTsumo: 'ニセン・ヨンセン' },
+      4: { ron: 8000, tsumo: [2000, 4000], yomiRon: 'マンガン', yomiTsumo: 'ニセン・ヨンセン' }
+    }
   },
   dealer: {
-    20: { 2: { tsumo: '700オール', yomi: 'ナナヒャクオール' }, 3: { tsumo: '1300オール', yomi: 'センサンビャクオール' }, 4: { tsumo: '2600オール', yomi: 'ニセンロッピャクオール' } },
-    25: { 2: { ron: 2400, yomi: 'ニーヨン' }, 3: { ron: 4800, tsumo: '1600オール', yomi: 'ヨンパチ ／ イチロクオール' }, 4: { ron: 9600, tsumo: '3200オール', yomi: 'クンロク ／ ザンニオール' } },
-    30: { 1: { ron: 1500, tsumo: '500オール', yomi: 'イチゴー ／ ゴヒャクオール' }, 2: { ron: 2900, tsumo: '1000オール', yomi: 'ニック ／ センオール' }, 3: { ron: 5800, tsumo: '2000オール', yomi: 'ゴッパ ／ ニセンオール' }, 4: { ron: 11600, tsumo: '3900オール', yomi: 'ピンロク ／ サンキュウオール' } },
-    40: { 1: { ron: 2000, tsumo: '700オール', yomi: 'ニセン ／ ナナヒャクオール' }, 2: { ron: 3900, tsumo: '1300オール', yomi: 'サンキュウ ／ センサンオール' }, 3: { ron: 7700, tsumo: '2600オール', yomi: 'ナナナナ ／ ニーロクオール' }, 4: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン ／ ヨンセンオール' } },
-    50: { 1: { ron: 2400, tsumo: '800オール', yomi: 'ニーヨン ／ ハッピャクオール' }, 2: { ron: 4800, tsumo: '1600オール', yomi: 'ヨンパチ ／ イチロクオール' }, 3: { ron: 9600, tsumo: '3200オール', yomi: 'クンロク ／ ザンニオール' }, 4: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン ／ ヨンセンオール' } },
-    60: { 1: { ron: 2900, tsumo: '1000オール', yomi: 'ニック ／ センオール' }, 2: { ron: 5800, tsumo: '2000オール', yomi: 'ゴッパ ／ ニセンオール' }, 3: { ron: 11600, tsumo: '3900オール', yomi: 'ピンロク ／ サンキュウオール' }, 4: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン ／ ヨンセンオール' } },
-    70: { 1: { ron: 3400, tsumo: '1200オール', yomi: 'サンヨン ／ センニオール' }, 2: { ron: 6800, tsumo: '2300オール', yomi: 'ロッパチ ／ ニーサンオール' }, 3: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン ／ ヨンセンオール' }, 4: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン ／ ヨンセンオール' } }
+    20: {
+      2: { tsumoAll: 700, yomi: 'ナナヒャクオール' },
+      3: { tsumoAll: 1300, yomi: 'センサンビャクオール' },
+      4: { tsumoAll: 2600, yomi: 'ニセンロッピャクオール' }
+    },
+    25: {
+      2: { ron: 2400, yomi: 'ニーヨン' },
+      3: { ron: 4800, tsumoAll: 1600, yomiRon: 'ヨンパチ', yomiTsumo: 'イチロクオール' },
+      4: { ron: 9600, tsumoAll: 3200, yomiRon: 'クンロク', yomiTsumo: 'ザンニオール' }
+    },
+    30: {
+      1: { ron: 1500, tsumoAll: 500, yomiRon: 'イチゴー', yomiTsumo: 'ゴヒャクオール' },
+      2: { ron: 2900, tsumoAll: 1000, yomiRon: 'ニック', yomiTsumo: 'センオール' },
+      3: { ron: 5800, tsumoAll: 2000, yomiRon: 'ゴッパ', yomiTsumo: 'ニセンオール' },
+      4: { ron: 11600, tsumoAll: 3900, yomiRon: 'ピンロク', yomiTsumo: 'サンキュウオール' }
+    },
+    40: {
+      1: { ron: 2000, tsumoAll: 700, yomiRon: 'ニセン', yomiTsumo: 'ナナヒャクオール' },
+      2: { ron: 3900, tsumoAll: 1300, yomiRon: 'サンキュウ', yomiTsumo: 'センサンオール' },
+      3: { ron: 7700, tsumoAll: 2600, yomiRon: 'ナナナナ', yomiTsumo: 'ニーロクオール' },
+      4: { ron: 12000, tsumoAll: 4000, yomiRon: 'マンガン', yomiTsumo: 'ヨンセンオール' }
+    },
+    50: {
+      1: { ron: 2400, tsumoAll: 800, yomiRon: 'ニーヨン', yomiTsumo: 'ハッピャクオール' },
+      2: { ron: 4800, tsumoAll: 1600, yomiRon: 'ヨンパチ', yomiTsumo: 'イチロクオール' },
+      3: { ron: 9600, tsumoAll: 3200, yomiRon: 'クンロク', yomiTsumo: 'ザンニオール' },
+      4: { ron: 12000, tsumoAll: 4000, yomiRon: 'マンガン', yomiTsumo: 'ヨンセンオール' }
+    },
+    60: {
+      1: { ron: 2900, tsumoAll: 1000, yomiRon: 'ニック', yomiTsumo: 'センオール' },
+      2: { ron: 5800, tsumoAll: 2000, yomiRon: 'ゴッパ', yomiTsumo: 'ニセンオール' },
+      3: { ron: 11600, tsumoAll: 3900, yomiRon: 'ピンロク', yomiTsumo: 'サンキュウオール' },
+      4: { ron: 12000, tsumoAll: 4000, yomiRon: 'マンガン', yomiTsumo: 'ヨンセンオール' }
+    },
+    70: {
+      1: { ron: 3400, tsumoAll: 1200, yomiRon: 'サンヨン', yomiTsumo: 'センニオール' },
+      2: { ron: 6800, tsumoAll: 2300, yomiRon: 'ロッパチ', yomiTsumo: 'ニーサンオール' },
+      3: { ron: 12000, tsumoAll: 4000, yomiRon: 'マンガン', yomiTsumo: 'ヨンセンオール' },
+      4: { ron: 12000, tsumoAll: 4000, yomiRon: 'マンガン', yomiTsumo: 'ヨンセンオール' }
+    }
   }
 };
 
-function updateResult(han, fu) {
+function updateResult(han, fu, fuLiveText) {
   const isDealer = state.role === 'dealer';
   const roleName = isDealer ? '親' : '子';
   const metaEl = document.getElementById('resMeta');
+  const fuLiveEl = document.getElementById('resFuLive');
   const yomiEl = document.getElementById('resYomi');
   const scoreEl = document.getElementById('resScore');
   const breakEl = document.getElementById('resBreakdown');
 
+  // 符のリアルタイム表示は常に更新
+  fuLiveEl.innerText = fuLiveText;
+
+  const honbaTag = state.honba > 0 ? ` ／ ${state.honba}本場` : '';
+  const honbaRonAdd = state.honba * 300;
+  const honbaTsumoAdd = state.honba * 100;
+
   // 役なしチェック
   if (han === 0) {
-    metaEl.innerText = `${roleName} ／ 役なし`;
+    metaEl.innerText = `${roleName} ／ 役なし${honbaTag}`;
     yomiEl.innerText = 'アガれません';
     scoreEl.innerText = '0 点';
     breakEl.innerText = '役を1つ以上選択してください';
@@ -1240,38 +1404,66 @@ function updateResult(han, fu) {
 
   // 満貫以上の判定
   if (han >= 5) {
-    let title = '', scoreStr = '', yomi = '', breakStr = '';
+    let title = '', ronBase = 0, tsumoChild = 0, tsumoDealer = 0, tsumoAll = 0;
+    let yomiRon = '', yomiTsumo = '';
+
     if (han === 5) {
-      title = '満貫 (マンガン)';
-      scoreStr = isDealer ? '12,000 点' : '8,000 点';
-      yomi = isDealer ? (state.winType === 'ron' ? 'イチニッパ' : 'ヨンセンオール') : (state.winType === 'ron' ? 'マンガン' : 'ニセン・ヨンセン');
-      breakStr = isDealer ? (state.winType === 'tsumo' ? '4,000点オール' : '') : (state.winType === 'tsumo' ? '子2,000 ／ 親4,000' : '');
+      title = '満貫';
+      ronBase = isDealer ? 12000 : 8000;
+      tsumoChild = 2000; tsumoDealer = 4000; tsumoAll = 4000;
+      yomiRon = isDealer ? 'イチニッパ' : 'マンガン';
+      yomiTsumo = isDealer ? 'ヨンセンオール' : 'ニセン・ヨンセン';
     } else if (han <= 7) {
-      title = '跳満 (ハネマン)';
-      scoreStr = isDealer ? '18,000 点' : '12,000 点';
-      yomi = isDealer ? (state.winType === 'ron' ? 'イチハチ' : 'ロクセンオール') : (state.winType === 'ron' ? 'イチニッパ' : 'サンゼン・ロクセン');
-      breakStr = isDealer ? (state.winType === 'tsumo' ? '6,000点オール' : '') : (state.winType === 'tsumo' ? '子3,000 ／ 親6,000' : '');
+      title = '跳満';
+      ronBase = isDealer ? 18000 : 12000;
+      tsumoChild = 3000; tsumoDealer = 6000; tsumoAll = 6000;
+      yomiRon = isDealer ? 'イチハチ' : 'イチニッパ';
+      yomiTsumo = isDealer ? 'ロクセンオール' : 'サンゼン・ロクセン';
     } else if (han <= 10) {
-      title = '倍満 (バイマン)';
-      scoreStr = isDealer ? '24,000 点' : '16,000 点';
-      yomi = isDealer ? (state.winType === 'ron' ? 'ニーヨン' : 'ハッセンオール') : (state.winType === 'ron' ? 'イチロク' : 'ヨンセン・ハッセン');
-      breakStr = isDealer ? (state.winType === 'tsumo' ? '8,000点オール' : '') : (state.winType === 'tsumo' ? '子4,000 ／ 親8,000' : '');
+      title = '倍満';
+      ronBase = isDealer ? 24000 : 16000;
+      tsumoChild = 4000; tsumoDealer = 8000; tsumoAll = 8000;
+      yomiRon = isDealer ? 'ニーヨン' : 'イチロク';
+      yomiTsumo = isDealer ? 'ハッセンオール' : 'ヨンセン・ハッセン';
     } else if (han <= 12) {
-      title = '三倍満 (サンバイマン)';
-      scoreStr = isDealer ? '36,000 点' : '24,000 点';
-      yomi = isDealer ? (state.winType === 'ron' ? 'サンロク' : 'イチニオール') : (state.winType === 'ron' ? 'ニーヨン' : 'ロクセン・イチニ');
-      breakStr = isDealer ? (state.winType === 'tsumo' ? '12,000点オール' : '') : (state.winType === 'tsumo' ? '子6,000 ／ 親12,000' : '');
+      title = '三倍満';
+      ronBase = isDealer ? 36000 : 24000;
+      tsumoChild = 6000; tsumoDealer = 12000; tsumoAll = 12000;
+      yomiRon = isDealer ? 'サンロク' : 'ニーヨン';
+      yomiTsumo = isDealer ? 'イチニオール' : 'ロクセン・イチニ';
     } else {
-      title = '数え役満 (ヤクマン)';
-      scoreStr = isDealer ? '48,000 点' : '32,000 点';
-      yomi = isDealer ? (state.winType === 'ron' ? 'ヨンパチ' : 'イチロクオール') : (state.winType === 'ron' ? 'ザンニ' : 'ハッセン・イチロク');
-      breakStr = isDealer ? (state.winType === 'tsumo' ? '16,000点オール' : '') : (state.winType === 'tsumo' ? '子8,000 ／ 親16,000' : '');
+      title = '数え役満';
+      ronBase = isDealer ? 48000 : 32000;
+      tsumoChild = 8000; tsumoDealer = 16000; tsumoAll = 16000;
+      yomiRon = isDealer ? 'ヨンパチ' : 'ザンニ';
+      yomiTsumo = isDealer ? 'イチロクオール' : 'ハッセン・イチロク';
     }
 
-    metaEl.innerText = `${roleName} ／ ${han}翻 【${title}】`;
-    yomiEl.innerText = yomi;
-    scoreEl.innerText = scoreStr;
-    breakEl.innerText = breakStr;
+    metaEl.innerText = `${roleName} ／ ${han}翻 【${title}】${honbaTag}`;
+
+    if (state.winType === 'ron') {
+      const total = ronBase + honbaRonAdd;
+      scoreEl.innerText = `${total.toLocaleString()} 点`;
+      yomiEl.innerText = state.honba > 0 ? `${yomiRon}は${total.toLocaleString()}点` : yomiRon;
+      breakEl.innerText = state.honba > 0
+        ? `基本${ronBase.toLocaleString()} ＋ 本場${honbaRonAdd.toLocaleString()}`
+        : '放銃者の全額払い';
+    } else if (isDealer) {
+      const each = tsumoAll + honbaTsumoAdd;
+      scoreEl.innerText = `${each.toLocaleString()}オール`;
+      yomiEl.innerText = state.honba > 0 ? `${yomiTsumo}は${each.toLocaleString()}オール` : yomiTsumo;
+      breakEl.innerText = state.honba > 0
+        ? `基本${tsumoAll.toLocaleString()} ＋ 本場${honbaTsumoAdd.toLocaleString()}ずつ`
+        : '各家から均等払い';
+    } else {
+      const cPay = tsumoChild + honbaTsumoAdd;
+      const dPay = tsumoDealer + honbaTsumoAdd;
+      scoreEl.innerText = `${cPay.toLocaleString()}・${dPay.toLocaleString()}`;
+      yomiEl.innerText = state.honba > 0 ? `${yomiTsumo}は${cPay}・${dPay}` : yomiTsumo;
+      breakEl.innerText = state.honba > 0
+        ? `子${cPay.toLocaleString()} ／ 親${dPay.toLocaleString()}（本場込）`
+        : '子払い ／ 親払い';
+    }
     return;
   }
 
@@ -1280,33 +1472,67 @@ function updateResult(han, fu) {
   const table = isDealer ? SCORE_DATA.dealer : SCORE_DATA.child;
   const entry = (table[safeFu] && table[safeFu][han]) ? table[safeFu][han] : null;
 
-  metaEl.innerText = `${roleName} ／ ${han}翻 ${safeFu}符`;
+  metaEl.innerText = `${roleName} ／ ${han}翻 ${safeFu}符${honbaTag}`;
 
   if (!entry) {
-    scoreEl.innerText = isDealer ? '満貫 12,000 点' : '満貫 8,000 点';
+    const fallbackRon = (isDealer ? 12000 : 8000) + honbaRonAdd;
+    scoreEl.innerText = `${fallbackRon.toLocaleString()} 点`;
     yomiEl.innerText = 'マンガン';
     breakEl.innerText = '';
     return;
   }
 
   if (state.winType === 'tsumo') {
-    if (entry.tsumo) {
-      scoreEl.innerText = entry.tsumo;
-      yomiEl.innerText = entry.yomi || '';
-      breakEl.innerText = isDealer ? '各家から均等払い' : '子払い ／ 親払い';
+    if (isDealer && entry.tsumoAll) {
+      const each = entry.tsumoAll + honbaTsumoAdd;
+      const baseYomi = entry.yomiTsumo || entry.yomi || '';
+      scoreEl.innerText = `${each.toLocaleString()}オール`;
+      yomiEl.innerText = state.honba > 0 ? `${baseYomi}は${each.toLocaleString()}オール` : baseYomi;
+      breakEl.innerText = state.honba > 0
+        ? `基本${entry.tsumoAll.toLocaleString()} ＋ 本場${honbaTsumoAdd.toLocaleString()}ずつ`
+        : '各家から均等払い';
+    } else if (!isDealer && entry.tsumo) {
+      const cPay = entry.tsumo[0] + honbaTsumoAdd;
+      const dPay = entry.tsumo[1] + honbaTsumoAdd;
+      const baseYomi = entry.yomiTsumo || entry.yomi || '';
+      scoreEl.innerText = `${cPay.toLocaleString()}・${dPay.toLocaleString()}`;
+      yomiEl.innerText = state.honba > 0 ? `${baseYomi}は${cPay}・${dPay}` : baseYomi;
+      breakEl.innerText = state.honba > 0
+        ? `子${cPay.toLocaleString()} ／ 親${dPay.toLocaleString()}（本場込）`
+        : '子払い ／ 親払い';
+    } else if (entry.ron) {
+      const total = entry.ron + honbaRonAdd;
+      scoreEl.innerText = `${total.toLocaleString()} 点`;
+      yomiEl.innerText = entry.yomiRon || entry.yomi || '';
+      breakEl.innerText = '';
     } else {
-      scoreEl.innerText = entry.ron ? entry.ron.toLocaleString() + ' 点' : '-';
-      yomiEl.innerText = entry.yomi || '';
+      scoreEl.innerText = '-';
+      yomiEl.innerText = '';
       breakEl.innerText = '';
     }
   } else {
     if (entry.ron) {
-      scoreEl.innerText = entry.ron.toLocaleString() + ' 点';
+      const total = entry.ron + honbaRonAdd;
+      const baseYomi = entry.yomiRon || entry.yomi || '';
+      scoreEl.innerText = `${total.toLocaleString()} 点`;
+      yomiEl.innerText = state.honba > 0 ? `${baseYomi}は${total.toLocaleString()}点` : baseYomi;
+      breakEl.innerText = state.honba > 0
+        ? `基本${entry.ron.toLocaleString()} ＋ 本場${honbaRonAdd.toLocaleString()}`
+        : '放銃者の全額払い';
+    } else if (isDealer && entry.tsumoAll) {
+      const each = entry.tsumoAll + honbaTsumoAdd;
+      scoreEl.innerText = `${each.toLocaleString()}オール`;
       yomiEl.innerText = entry.yomi || '';
-      breakEl.innerText = '放銃者の全額払い';
+      breakEl.innerText = '';
+    } else if (!isDealer && entry.tsumo) {
+      const cPay = entry.tsumo[0] + honbaTsumoAdd;
+      const dPay = entry.tsumo[1] + honbaTsumoAdd;
+      scoreEl.innerText = `${cPay.toLocaleString()}・${dPay.toLocaleString()}`;
+      yomiEl.innerText = entry.yomi || '';
+      breakEl.innerText = '';
     } else {
-      scoreEl.innerText = entry.tsumo || '-';
-      yomiEl.innerText = entry.yomi || '';
+      scoreEl.innerText = '-';
+      yomiEl.innerText = '';
       breakEl.innerText = '';
     }
   }
