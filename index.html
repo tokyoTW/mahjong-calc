@@ -95,7 +95,7 @@
       display: block;
     }
     .q-note {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
       margin-top: -6px;
       margin-bottom: 10px;
@@ -105,7 +105,12 @@
     /* ボタングループ */
     .btn-group {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+    }
+    .btn-group-2col {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
       gap: 8px;
     }
     .btn-toggle {
@@ -145,8 +150,8 @@
 
     /* イラスト入りボタン調整 */
     .btn-visual {
-      padding: 12px 10px;
-      min-height: 94px;
+      padding: 12px 8px;
+      min-height: 92px;
     }
     .tile-illust {
       display: flex;
@@ -257,46 +262,6 @@
       font-size: 0.88rem;
       font-weight: 600;
       margin-top: 12px;
-    }
-
-    /* STEP2 計算式バナー＆自動符表示 */
-    .fu-formula-banner {
-      background: linear-gradient(135deg, #fdf2f8 0%, #f5f3ff 100%);
-      border: 1px solid #e9d5ff;
-      border-radius: 10px;
-      padding: 10px 12px;
-      margin-bottom: 16px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #6b21a8;
-      text-align: center;
-    }
-    .fu-formula-nums {
-      font-size: 0.86rem;
-      color: #be185d;
-      margin-top: 4px;
-      font-weight: 700;
-    }
-    .auto-fu-box {
-      background: #faf5ff;
-      border: 1px solid #eadbf5;
-      border-radius: 10px;
-      padding: 10px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 0.88rem;
-    }
-    .auto-fu-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-    .auto-fu-val {
-      font-weight: 800;
-      color: #9333ea;
-      white-space: nowrap;
     }
 
     /* 形につく符（2行×4列テーブル） */
@@ -527,94 +492,100 @@
   <!-- 第2フェーズ：符の確定（必要な場合のみ表示） -->
   <section class="card" id="fuSection">
     <div class="card-title">
-      <span><span class="step-badge">STEP 2</span>符の計算</span>
+      <span><span class="step-badge">STEP 2</span>符の計算（基本符20符＋以下を加算）</span>
       <span id="fuSummary" style="font-size:0.92rem; color:#be185d;">計 30符 ➔ 30符</span>
     </div>
 
-    <!-- 計算式まとめ -->
-    <div class="fu-formula-banner">
-      <div>基本符＋アガリ方につく符＋待ちにつく符＋アタマにつく符＋形につく符</div>
-      <div class="fu-formula-nums" id="fuFormulaDetail">20 ＋ 10 ＋ 0 ＋ 0 ＋ 0 ＝ 30符 ➔ 30符</div>
-    </div>
-
-    <!-- ◎基本符 ＋ ◎アガリ方につく符（自動反映） -->
+    <!-- ① アガリ方 -->
     <div class="question-block">
-      <span class="q-label">◎基本符・◎アガリ方につく符（自動計算）</span>
-      <div class="auto-fu-box">
-        <div class="auto-fu-row">
-          <span>◎基本符（フーテイ）</span>
-          <span class="auto-fu-val">20符</span>
-        </div>
-        <div class="auto-fu-row">
-          <span id="agariFuLabel">◎アガリ方につく符：メンゼンロン（門前加符）</span>
-          <span class="auto-fu-val" id="agariFuVal">＋10符</span>
-        </div>
+      <span class="q-label">① アガリ方</span>
+      <span class="q-note">※副露ロンはどちらも選択不要（0符）</span>
+      <div class="btn-group-2col">
+        <button class="btn-toggle" id="fuAgariTsumo" onclick="toggleFuAgari('tsumo')">
+          <span>ツモ</span>
+          <span class="btn-subtext">＋2符</span>
+        </button>
+        <button class="btn-toggle active" id="fuAgariMenzenRon" onclick="toggleFuAgari('menzen_ron')">
+          <span>面前ロン（門前加符）</span>
+          <span class="btn-subtext">＋10符</span>
+        </button>
       </div>
     </div>
 
-    <!-- ◎待ちにつく符 -->
+    <!-- ② 待ち方（4種類） -->
     <div class="question-block">
-      <span class="q-label">◎待ちにつく符</span>
-      <span class="q-note">※リャンメン、シャンポン待ちは0符</span>
-      <div class="btn-group">
+      <span class="q-label">② 待ち方</span>
+      <div class="btn-group-2col">
         <button class="btn-toggle btn-visual active" id="waitRyanmen" onclick="setWait('ryanmen')">
           <div class="tile-illust">
-            <svg width="136" height="36" viewBox="0 0 136 36" aria-hidden="true">
-              <rect x="2" y="4" width="22" height="28" rx="4" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="3 2"/>
-              <text x="13" y="23" text-anchor="middle" font-size="13" font-weight="700" fill="#db2777">1</text>
-              <text x="33" y="22" text-anchor="middle" font-size="11" fill="#a855f7">←</text>
-              <rect x="42" y="4" width="24" height="28" rx="4" fill="#ffffff" stroke="#a855f7" stroke-width="1.5"/>
-              <text x="54" y="23" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">2</text>
-              <rect x="70" y="4" width="24" height="28" rx="4" fill="#ffffff" stroke="#a855f7" stroke-width="1.5"/>
-              <text x="82" y="23" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">3</text>
-              <text x="103" y="22" text-anchor="middle" font-size="11" fill="#a855f7">→</text>
-              <rect x="112" y="4" width="22" height="28" rx="4" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="3 2"/>
-              <text x="123" y="23" text-anchor="middle" font-size="13" font-weight="700" fill="#db2777">4</text>
+            <svg width="124" height="36" viewBox="0 0 124 36" aria-hidden="true">
+              <rect x="2" y="4" width="20" height="28" rx="4" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="3 2"/>
+              <text x="12" y="23" text-anchor="middle" font-size="12" font-weight="700" fill="#db2777">1</text>
+              <text x="30" y="22" text-anchor="middle" font-size="10" fill="#a855f7">←</text>
+              <rect x="38" y="4" width="22" height="28" rx="4" fill="#ffffff" stroke="#a855f7" stroke-width="1.5"/>
+              <text x="49" y="23" text-anchor="middle" font-size="13" font-weight="700" fill="#4c1d95">2</text>
+              <rect x="64" y="4" width="22" height="28" rx="4" fill="#ffffff" stroke="#a855f7" stroke-width="1.5"/>
+              <text x="75" y="23" text-anchor="middle" font-size="13" font-weight="700" fill="#4c1d95">3</text>
+              <text x="94" y="22" text-anchor="middle" font-size="10" fill="#a855f7">→</text>
+              <rect x="102" y="4" width="20" height="28" rx="4" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="3 2"/>
+              <text x="112" y="23" text-anchor="middle" font-size="12" font-weight="700" fill="#db2777">4</text>
             </svg>
           </div>
-          <span>リャンメン／シャンポン待ち</span>
+          <span>リャンメン／シャンポン</span>
           <span class="btn-subtext">0符</span>
         </button>
 
-        <button class="btn-toggle btn-visual" id="waitBad" onclick="setWait('bad')">
+        <button class="btn-toggle btn-visual" id="waitKanchan" onclick="setWait('kanchan')">
           <div class="tile-illust">
-            <svg width="136" height="36" viewBox="0 0 136 36" aria-hidden="true">
-              <rect x="4" y="4" width="24" height="28" rx="4" fill="#ffffff" stroke="#a855f7" stroke-width="1.5"/>
-              <text x="16" y="23" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">2</text>
-              <rect x="32" y="4" width="24" height="28" rx="4" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="3 2"/>
-              <text x="44" y="23" text-anchor="middle" font-size="13" font-weight="700" fill="#db2777">3</text>
-              <rect x="60" y="4" width="24" height="28" rx="4" fill="#ffffff" stroke="#a855f7" stroke-width="1.5"/>
-              <text x="72" y="23" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">4</text>
-              <text x="95" y="22" text-anchor="middle" font-size="11" fill="#9ca3af">／</text>
-              <rect x="105" y="4" width="24" height="28" rx="4" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="3 2"/>
-              <text x="117" y="22" text-anchor="middle" font-size="11" font-weight="700" fill="#db2777">単</text>
+            <svg width="86" height="36" viewBox="0 0 86 36" aria-hidden="true">
+              <rect x="4" y="4" width="22" height="28" rx="4" fill="#ffffff" stroke="#a855f7" stroke-width="1.5"/>
+              <text x="15" y="23" text-anchor="middle" font-size="13" font-weight="700" fill="#4c1d95">2</text>
+              <rect x="32" y="4" width="22" height="28" rx="4" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="3 2"/>
+              <text x="43" y="23" text-anchor="middle" font-size="13" font-weight="700" fill="#db2777">3</text>
+              <rect x="60" y="4" width="22" height="28" rx="4" fill="#ffffff" stroke="#a855f7" stroke-width="1.5"/>
+              <text x="71" y="23" text-anchor="middle" font-size="13" font-weight="700" fill="#4c1d95">4</text>
             </svg>
           </div>
-          <span>カンチャン／ペンチャン／タンキ待ち</span>
+          <span>カンチャン待ち</span>
+          <span class="btn-subtext">＋2符</span>
+        </button>
+
+        <button class="btn-toggle btn-visual" id="waitPenchan" onclick="setWait('penchan')">
+          <div class="tile-illust">
+            <svg width="86" height="36" viewBox="0 0 86 36" aria-hidden="true">
+              <rect x="4" y="4" width="22" height="28" rx="4" fill="#ffffff" stroke="#a855f7" stroke-width="1.5"/>
+              <text x="15" y="23" text-anchor="middle" font-size="13" font-weight="700" fill="#4c1d95">1</text>
+              <rect x="32" y="4" width="22" height="28" rx="4" fill="#ffffff" stroke="#a855f7" stroke-width="1.5"/>
+              <text x="43" y="23" text-anchor="middle" font-size="13" font-weight="700" fill="#4c1d95">2</text>
+              <rect x="60" y="4" width="22" height="28" rx="4" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="3 2"/>
+              <text x="71" y="23" text-anchor="middle" font-size="13" font-weight="700" fill="#db2777">3</text>
+            </svg>
+          </div>
+          <span>ペンチャン待ち</span>
+          <span class="btn-subtext">＋2符</span>
+        </button>
+
+        <button class="btn-toggle btn-visual" id="waitTanki" onclick="setWait('tanki')">
+          <div class="tile-illust">
+            <svg width="62" height="36" viewBox="0 0 62 36" aria-hidden="true">
+              <rect x="5" y="4" width="22" height="28" rx="4" fill="#ffffff" stroke="#a855f7" stroke-width="1.5"/>
+              <text x="16" y="23" text-anchor="middle" font-size="13" font-weight="700" fill="#4c1d95">五</text>
+              <rect x="35" y="4" width="22" height="28" rx="4" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="3 2"/>
+              <text x="46" y="23" text-anchor="middle" font-size="13" font-weight="700" fill="#db2777">五</text>
+            </svg>
+          </div>
+          <span>タンキ待ち</span>
           <span class="btn-subtext">＋2符</span>
         </button>
       </div>
     </div>
 
-    <!-- ◎アタマにつく符 -->
+    <!-- ③ アタマ -->
     <div class="question-block">
-      <span class="q-label">◎アタマにつく符</span>
-      <span class="q-note">※連風牌（レンプウハイ）＝ダブ東・ダブ南</span>
-      <div class="btn-group">
-        <button class="btn-toggle btn-visual active" id="headNormal" onclick="setHead('normal')">
-          <div class="tile-illust">
-            <svg width="64" height="36" viewBox="0 0 64 36" aria-hidden="true">
-              <rect x="6" y="4" width="24" height="28" rx="4" fill="#ffffff" stroke="#a855f7" stroke-width="1.5"/>
-              <text x="18" y="23" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">五</text>
-              <rect x="34" y="4" width="24" height="28" rx="4" fill="#ffffff" stroke="#a855f7" stroke-width="1.5"/>
-              <text x="46" y="23" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">五</text>
-            </svg>
-          </div>
-          <span>数牌／役のない風牌</span>
-          <span class="btn-subtext">0符</span>
-        </button>
-
-        <button class="btn-toggle btn-visual" id="headYakuhai" onclick="setHead('yakuhai')">
+      <span class="q-label">③ アタマ</span>
+      <span class="q-note">※数牌や役のない風牌は選択不要（0符）／連風牌＝ダブ東・ダブ南</span>
+      <div class="btn-group-2col">
+        <button class="btn-toggle btn-visual" id="headYakuhai" onclick="toggleHead('yakuhai')">
           <div class="tile-illust">
             <svg width="64" height="36" viewBox="0 0 64 36" aria-hidden="true">
               <rect x="6" y="4" width="24" height="28" rx="4" fill="#ffffff" stroke="#ec4899" stroke-width="1.5"/>
@@ -623,11 +594,11 @@
               <text x="46" y="23" text-anchor="middle" font-size="14" font-weight="800" fill="#be185d">中</text>
             </svg>
           </div>
-          <span>アタマが役牌</span>
+          <span>役牌</span>
           <span class="btn-subtext">＋2符</span>
         </button>
 
-        <button class="btn-toggle btn-visual" id="headRenpu" onclick="setHead('renpu')">
+        <button class="btn-toggle btn-visual" id="headRenpu" onclick="toggleHead('renpu')">
           <div class="tile-illust">
             <svg width="64" height="36" viewBox="0 0 64 36" aria-hidden="true">
               <rect x="6" y="4" width="24" height="28" rx="4" fill="#fdf2f8" stroke="#db2777" stroke-width="1.5"/>
@@ -636,15 +607,15 @@
               <text x="46" y="23" text-anchor="middle" font-size="14" font-weight="800" fill="#9d174d">東</text>
             </svg>
           </div>
-          <span>アタマが連風牌</span>
+          <span>連風牌</span>
           <span class="btn-subtext">＋4符</span>
         </button>
       </div>
     </div>
 
-    <!-- ◎形につく符 -->
+    <!-- ④ 形 -->
     <div class="question-block">
-      <span class="q-label">◎形につく符</span>
+      <span class="q-label">④ 形</span>
       <div class="shape-table-wrap">
         <table class="shape-table">
           <thead>
@@ -694,14 +665,15 @@
 <script>
 // --- 状態管理 ---
 const state = {
-  role: 'child',       // 'child' | 'dealer'
-  winType: 'ron',      // 'ron' | 'tsumo'
-  menzen: true,        // true | false
-  riichi: 'none',      // 'none' | 'riichi' | 'double'
-  selectedYaku: [],    // 役ID配列
+  role: 'child',          // 'child' | 'dealer'
+  winType: 'ron',         // 'ron' | 'tsumo'
+  menzen: true,           // true | false
+  riichi: 'none',         // 'none' | 'riichi' | 'double'
+  selectedYaku: [],       // 役ID配列
   dora: 0,
-  waitType: 'ryanmen', // 'ryanmen' | 'bad'
-  headType: 'normal',  // 'normal' | 'yakuhai' | 'renpu'
+  fuAgari: 'menzen_ron',  // 'none' | 'tsumo' | 'menzen_ron'
+  waitType: 'ryanmen',    // 'ryanmen' | 'kanchan' | 'penchan' | 'tanki'
+  headType: 'none',       // 'none' | 'yakuhai' | 'renpu'
   shapes: {
     t_minko: 0,  // タンヤオ牌 明刻 (+2)
     t_anko: 0,   // タンヤオ牌 暗刻 (+4)
@@ -714,7 +686,7 @@ const state = {
   }
 };
 
-// 役マスター（「一発」1翻を追加、全スラッシュ全角）
+// 役マスター
 const YAKU_LIST = [
   { id: 'ippatsu', name: '一発', han: 1, menzenOnly: true, requiresRiichi: true, excludes: [] },
   { id: 'pinfu', name: '平和 (ピンフ)', han: 1, menzenOnly: true, excludes: ['yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind', 'toitoi', 'sanankou', 'chiitoitsu'] },
@@ -735,7 +707,7 @@ const YAKU_LIST = [
   { id: 'chinitsu', name: '清一色', han: 6, menzenOnly: false, hanNaki: 5, excludes: ['tanyao', 'honitsu', 'chanta', 'yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind'] }
 ];
 
-// 形につく符の表データ（添付画像準拠）
+// 形につく符の表データ
 const SHAPE_ROWS = [
   {
     rowTitle: 'タンヤオ牌',
@@ -857,6 +829,7 @@ const SHAPE_ROWS = [
 function init() {
   renderYakuGrid();
   renderShapeTable();
+  syncFuAgariFromStep1();
   recalc();
 }
 
@@ -910,6 +883,17 @@ function renderShapeTable() {
   });
 }
 
+// STEP1のアガリ方・門前状態からSTEP2の①アガリ方を同期
+function syncFuAgariFromStep1() {
+  if (state.winType === 'tsumo') {
+    state.fuAgari = 'tsumo';
+  } else if (state.menzen && state.winType === 'ron') {
+    state.fuAgari = 'menzen_ron';
+  } else {
+    state.fuAgari = 'none';
+  }
+}
+
 // --- 操作ハンドラ ---
 function setRole(role) {
   state.role = role;
@@ -922,6 +906,7 @@ function setWinType(winType) {
   state.winType = winType;
   document.getElementById('btnRon').classList.toggle('active', winType === 'ron');
   document.getElementById('btnTsumo').classList.toggle('active', winType === 'tsumo');
+  syncFuAgariFromStep1();
   recalc();
 }
 
@@ -951,6 +936,7 @@ function setMenzen(menzen) {
     return !(yaku && yaku.menzenOnly && !menzen);
   });
 
+  syncFuAgariFromStep1();
   renderYakuGrid();
   recalc();
 }
@@ -962,7 +948,6 @@ function setRiichi(riichi) {
   });
   if (riichi === 'none') {
     document.getElementById('riichiNone').classList.add('active');
-    // リーチなしなら一発を自動解除
     state.selectedYaku = state.selectedYaku.filter(id => id !== 'ippatsu');
   }
   if (riichi === 'riichi') document.getElementById('riichiNormal').classList.add('active');
@@ -975,12 +960,10 @@ function toggleYaku(yakuId) {
   if (index >= 0) {
     state.selectedYaku.splice(index, 1);
   } else {
-    // 排他関係にある役を自動解除
     const target = YAKU_LIST.find(y => y.id === yakuId);
     if (target && target.excludes) {
       state.selectedYaku = state.selectedYaku.filter(id => !target.excludes.includes(id));
     }
-    // 逆方向の排他も解除
     state.selectedYaku = state.selectedYaku.filter(id => {
       const y = YAKU_LIST.find(item => item.id === id);
       return !(y && y.excludes && y.excludes.includes(yakuId));
@@ -997,18 +980,34 @@ function changeDora(delta) {
   recalc();
 }
 
-function setWait(wait) {
-  state.waitType = wait;
-  document.getElementById('waitRyanmen').classList.toggle('active', wait === 'ryanmen');
-  document.getElementById('waitBad').classList.toggle('active', wait === 'bad');
+function toggleFuAgari(type) {
+  if (type === 'menzen_ron' && !state.menzen) return;
+  if (state.fuAgari === type) {
+    state.fuAgari = 'none';
+  } else {
+    state.fuAgari = type;
+  }
   recalc();
 }
 
-function setHead(head) {
-  state.headType = head;
-  document.getElementById('headNormal').classList.toggle('active', head === 'normal');
-  document.getElementById('headYakuhai').classList.toggle('active', head === 'yakuhai');
-  document.getElementById('headRenpu').classList.toggle('active', head === 'renpu');
+function setWait(wait) {
+  state.waitType = wait;
+  ['waitRyanmen', 'waitKanchan', 'waitPenchan', 'waitTanki'].forEach(id => {
+    document.getElementById(id).classList.remove('active');
+  });
+  if (wait === 'ryanmen') document.getElementById('waitRyanmen').classList.add('active');
+  if (wait === 'kanchan') document.getElementById('waitKanchan').classList.add('active');
+  if (wait === 'penchan') document.getElementById('waitPenchan').classList.add('active');
+  if (wait === 'tanki') document.getElementById('waitTanki').classList.add('active');
+  recalc();
+}
+
+function toggleHead(head) {
+  if (state.headType === head) {
+    state.headType = 'none';
+  } else {
+    state.headType = head;
+  }
   recalc();
 }
 
@@ -1030,13 +1029,9 @@ function updateConstraints() {
 
     let disabled = false;
 
-    // 門前限定役
     if (yaku.menzenOnly && !state.menzen) disabled = true;
-
-    // リーチ必須役（一発）
     if (yaku.requiresRiichi && state.riichi === 'none') disabled = true;
 
-    // 他の選択役との排他チェック
     state.selectedYaku.forEach(selectedId => {
       if (selectedId === yaku.id) return;
       const sYaku = YAKU_LIST.find(y => y.id === selectedId);
@@ -1047,26 +1042,35 @@ function updateConstraints() {
     btn.disabled = disabled;
   });
 
-  // タンヤオ選択時の符計算（役牌・連風牌アタマ、1・9・字牌の形）の無効化
+  // STEP2 ①アガリ方の状態・副露時の面前ロン無効化
+  const btnFuTsumo = document.getElementById('fuAgariTsumo');
+  const btnFuMenzenRon = document.getElementById('fuAgariMenzenRon');
+  if (!state.menzen) {
+    if (state.fuAgari === 'menzen_ron') state.fuAgari = 'none';
+    btnFuMenzenRon.disabled = true;
+  } else {
+    btnFuMenzenRon.disabled = false;
+  }
+  btnFuTsumo.classList.toggle('active', state.fuAgari === 'tsumo');
+  btnFuMenzenRon.classList.toggle('active', state.fuAgari === 'menzen_ron');
+
+  // STEP2 ③アタマの状態・タンヤオ時の役牌・連風牌無効化
   const hasTanyao = state.selectedYaku.includes('tanyao');
   const headYakuhaiBtn = document.getElementById('headYakuhai');
   const headRenpuBtn = document.getElementById('headRenpu');
 
   if (hasTanyao) {
-    if (state.headType === 'yakuhai' || state.headType === 'renpu') {
-      state.headType = 'normal';
-      document.getElementById('headNormal').classList.add('active');
-      headYakuhaiBtn.classList.remove('active');
-      headRenpuBtn.classList.remove('active');
-    }
+    state.headType = 'none';
     headYakuhaiBtn.disabled = true;
     headRenpuBtn.disabled = true;
   } else {
     headYakuhaiBtn.disabled = false;
     headRenpuBtn.disabled = false;
   }
+  headYakuhaiBtn.classList.toggle('active', state.headType === 'yakuhai');
+  headRenpuBtn.classList.toggle('active', state.headType === 'renpu');
 
-  // 形テーブルのハイライト＆タンヤオ時の1・9・字牌無効化
+  // STEP2 ④形テーブルのハイライト＆タンヤオ時の1・9・字牌無効化
   SHAPE_ROWS.forEach(row => {
     row.cells.forEach(cell => {
       const td = document.getElementById('cell_' + cell.key);
@@ -1141,29 +1145,10 @@ function recalc() {
     fuSection.style.display = 'block';
     skipMessage.style.display = 'none';
 
-    // 各カテゴリの符を計算
     const baseFu = 20;
-
-    let agariFu = 0;
-    let agariLabel = '';
-    if (state.winType === 'tsumo') {
-      agariFu = 2;
-      agariLabel = '◎アガリ方につく符：ツモ符';
-    } else if (state.menzen && state.winType === 'ron') {
-      agariFu = 10;
-      agariLabel = '◎アガリ方につく符：メンゼンロン（門前加符）';
-    } else {
-      agariFu = 0;
-      agariLabel = '◎アガリ方につく符：鳴いてロン（0符）';
-    }
-    document.getElementById('agariFuLabel').innerText = agariLabel;
-    document.getElementById('agariFuVal').innerText = agariFu > 0 ? `＋${agariFu}符` : '0符';
-
-    const waitFu = state.waitType === 'bad' ? 2 : 0;
-
-    let headFu = 0;
-    if (state.headType === 'yakuhai') headFu = 2;
-    if (state.headType === 'renpu') headFu = 4;
+    const agariFu = state.fuAgari === 'tsumo' ? 2 : (state.fuAgari === 'menzen_ron' ? 10 : 0);
+    const waitFu = state.waitType === 'ryanmen' ? 0 : 2;
+    const headFu = state.headType === 'yakuhai' ? 2 : (state.headType === 'renpu' ? 4 : 0);
 
     const shapeFu =
       state.shapes.t_minko * 2 +
@@ -1186,8 +1171,6 @@ function recalc() {
     if (finalFu < 30 && !hasChiitoi) finalFu = 30;
 
     document.getElementById('fuSummary').innerText = `計 ${rawFu}符 ➔ ${finalFu}符`;
-    document.getElementById('fuFormulaDetail').innerText =
-      `${baseFu} ＋ ${agariFu} ＋ ${waitFu} ＋ ${headFu} ＋ ${shapeFu} ＝ ${rawFu}符 ➔ ${finalFu}符`;
   }
 
   // 3. 点数算出と表示更新
