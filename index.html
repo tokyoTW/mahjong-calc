@@ -29,11 +29,11 @@
       color: var(--text);
       line-height: 1.5;
       padding: 16px;
-      padding-bottom: 96px;
+      padding-bottom: 100px;
     }
 
     .container {
-      max-width: 680px;
+      max-width: 720px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -46,15 +46,10 @@
       padding: 12px 0 4px;
     }
     header h1 {
-      font-size: 1.5rem;
+      font-size: 1.55rem;
       color: var(--primary-dark);
       font-weight: 800;
       letter-spacing: 0.04em;
-    }
-    header p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 4px;
     }
 
     /* カード */
@@ -73,6 +68,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
     }
     .step-badge {
       background: linear-gradient(135deg, #ec8bbd 0%, #a97ce0 100%);
@@ -94,6 +91,13 @@
       font-size: 1.05rem;
       font-weight: 700;
       color: var(--text);
+      margin-bottom: 10px;
+      display: block;
+    }
+    .q-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: -6px;
       margin-bottom: 10px;
       display: block;
     }
@@ -130,7 +134,7 @@
       font-weight: 700;
     }
     .btn-toggle:disabled {
-      opacity: 0.4;
+      opacity: 0.38;
       background: #f3eff6;
       border-color: #e4dceb;
       color: #a495b0;
@@ -142,7 +146,7 @@
     /* イラスト入りボタン調整 */
     .btn-visual {
       padding: 12px 10px;
-      min-height: 92px;
+      min-height: 94px;
     }
     .tile-illust {
       display: flex;
@@ -153,7 +157,7 @@
     .btn-subtext {
       font-size: 0.78rem;
       color: var(--text-muted);
-      font-weight: 500;
+      font-weight: 600;
     }
     .btn-toggle.active .btn-subtext {
       color: #6b21a8;
@@ -162,7 +166,7 @@
     /* 役グリッド */
     .yaku-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
       gap: 8px;
     }
     .yaku-btn {
@@ -206,7 +210,7 @@
       text-decoration: line-through;
     }
 
-    /* ドラ・刻子ステッパー */
+    /* ステッパー */
     .stepper {
       display: inline-flex;
       align-items: center;
@@ -225,11 +229,15 @@
       color: var(--primary-dark);
       cursor: pointer;
     }
-    .stepper button:hover {
+    .stepper button:hover:not(:disabled) {
       background: #f3e8ff;
     }
+    .stepper button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
     .stepper span {
-      min-width: 38px;
+      min-width: 34px;
       text-align: center;
       font-weight: 700;
       font-size: 1rem;
@@ -251,34 +259,157 @@
       margin-top: 12px;
     }
 
-    /* 符計算用カウンター */
-    .kotsu-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px dashed var(--border);
-      font-size: 0.88rem;
+    /* STEP2 計算式バナー＆自動符表示 */
+    .fu-formula-banner {
+      background: linear-gradient(135deg, #fdf2f8 0%, #f5f3ff 100%);
+      border: 1px solid #e9d5ff;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 16px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #6b21a8;
+      text-align: center;
     }
-    .kotsu-row:last-child {
-      border-bottom: none;
+    .fu-formula-nums {
+      font-size: 0.86rem;
+      color: #be185d;
+      margin-top: 4px;
+      font-weight: 700;
     }
-    .kotsu-left {
+    .auto-fu-box {
+      background: #faf5ff;
+      border: 1px solid #eadbf5;
+      border-radius: 10px;
+      padding: 10px 14px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
+      font-size: 0.88rem;
     }
-    .kotsu-name {
+    .auto-fu-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .auto-fu-val {
+      font-weight: 800;
+      color: #9333ea;
+      white-space: nowrap;
+    }
+
+    /* 形につく符（2行×4列テーブル） */
+    .shape-table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 10px;
+      border: 1.5px solid #e5d4f5;
+    }
+    .shape-table {
+      width: 100%;
+      min-width: 540px;
+      border-collapse: collapse;
+      background: #ffffff;
+      text-align: center;
+    }
+    .shape-table th,
+    .shape-table td {
+      border: 1px solid #eadbf5;
+      padding: 8px 6px;
+      vertical-align: middle;
+    }
+    .shape-table thead th {
+      background: linear-gradient(180deg, #fdf2f8 0%, #f5f0ff 100%);
+      color: #581c87;
       font-weight: 700;
-      color: var(--text);
     }
-    .kotsu-sub {
-      font-size: 0.74rem;
+    .th-sub {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 600;
       color: var(--text-muted);
+      margin-bottom: 2px;
     }
-    .kotsu-illust {
+    .th-main {
+      display: block;
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #6b21a8;
+    }
+    .th-ruby {
+      display: block;
+      font-size: 0.64rem;
+      font-weight: 600;
+      color: #9333ea;
+    }
+    .row-header {
+      background: #faf5ff;
+      font-weight: 800;
+      color: #4c1d95;
+      font-size: 0.84rem;
+      width: 112px;
+    }
+    .row-header-sub {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
       margin-top: 2px;
+    }
+    .shape-cell {
+      transition: background 0.15s ease, opacity 0.15s ease;
+    }
+    .shape-cell.has-count {
+      background: #fdf2f8;
+    }
+    .shape-cell.disabled-cell {
+      opacity: 0.35;
+      background: #f5f2f7;
+    }
+    .cell-fu {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #be185d;
+      margin-bottom: 4px;
+    }
+    .cell-svg {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 6px;
+      min-height: 28px;
+    }
+    .mini-stepper {
+      display: inline-flex;
+      align-items: center;
+      background: #faf5ff;
+      border-radius: 8px;
+      border: 1.5px solid #d8b4fe;
+      overflow: hidden;
+    }
+    .mini-stepper button {
+      background: transparent;
+      border: none;
+      padding: 4px 10px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      cursor: pointer;
+    }
+    .mini-stepper button:hover:not(:disabled) {
+      background: #f3e8ff;
+    }
+    .mini-stepper button:disabled {
+      cursor: not-allowed;
+      opacity: 0.35;
+    }
+    .mini-stepper span {
+      min-width: 24px;
+      text-align: center;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--text);
     }
 
     /* 固定結果バー（画面下部・淡いピンク〜薄紫） */
@@ -294,6 +425,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 12px;
       z-index: 100;
     }
     .result-info {
@@ -302,7 +434,7 @@
       gap: 2px;
     }
     .result-meta {
-      font-size: 0.84rem;
+      font-size: 0.85rem;
       color: #7e22ce;
       font-weight: 700;
     }
@@ -312,14 +444,14 @@
       font-weight: 600;
     }
     .result-score {
-      font-size: 1.65rem;
+      font-size: 1.6rem;
       font-weight: 800;
       color: #6b21a8;
       letter-spacing: 0.5px;
       text-align: right;
     }
     .result-breakdown {
-      font-size: 0.72rem;
+      font-size: 0.74rem;
       color: #7c688a;
       text-align: right;
       font-weight: 600;
@@ -331,28 +463,30 @@
 <div class="container">
   <header>
     <h1>符計算＆点数計算</h1>
-    <p>質問に答えるだけで、排他ルールと符計算スキップを自動判定します</p>
   </header>
 
   <!-- 第1フェーズ：翻の確定 -->
   <section class="card">
     <div class="card-title">
       <span><span class="step-badge">STEP 1</span>基本条件と役（翻数）</span>
-      <span id="hanSummary" style="font-size:0.9rem; color:#9333ea;">0翻</span>
+      <span id="hanSummary" style="font-size:0.95rem; color:#9333ea;">0翻</span>
     </div>
 
-    <!-- 親・子 / ロン・ツモ -->
+    <!-- ① あなたの立場 -->
     <div class="question-block">
-      <span class="q-label">① あなたの立場とアガリ方</span>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
-        <div class="btn-group">
-          <button class="btn-toggle active" id="btnChild" onclick="setRole('child')">子</button>
-          <button class="btn-toggle" id="btnDealer" onclick="setRole('dealer')">親</button>
-        </div>
-        <div class="btn-group">
-          <button class="btn-toggle active" id="btnRon" onclick="setWinType('ron')">ロン</button>
-          <button class="btn-toggle" id="btnTsumo" onclick="setWinType('tsumo')">ツモ</button>
-        </div>
+      <span class="q-label">① あなたの立場</span>
+      <div class="btn-group">
+        <button class="btn-toggle active" id="btnChild" onclick="setRole('child')">子</button>
+        <button class="btn-toggle" id="btnDealer" onclick="setRole('dealer')">親</button>
+      </div>
+    </div>
+
+    <!-- ② アガリ方 -->
+    <div class="question-block">
+      <span class="q-label">② アガリ方</span>
+      <div class="btn-group" style="margin-bottom:8px;">
+        <button class="btn-toggle active" id="btnRon" onclick="setWinType('ron')">ロン</button>
+        <button class="btn-toggle" id="btnTsumo" onclick="setWinType('tsumo')">ツモ</button>
       </div>
       <div class="btn-group">
         <button class="btn-toggle active" id="btnMenzen" onclick="setMenzen(true)">門前（鳴いてない）</button>
@@ -360,9 +494,9 @@
       </div>
     </div>
 
-    <!-- リーチ -->
+    <!-- ③ リーチ -->
     <div class="question-block" id="riichiBlock">
-      <span class="q-label">② リーチしましたか？</span>
+      <span class="q-label">③ リーチしましたか？</span>
       <div class="btn-group">
         <button class="btn-toggle active" id="riichiNone" onclick="setRiichi('none')">なし</button>
         <button class="btn-toggle" id="riichiNormal" onclick="setRiichi('riichi')">リーチ (1翻)</button>
@@ -370,15 +504,15 @@
       </div>
     </div>
 
-    <!-- 役の選択（排他制御） -->
+    <!-- ④ 役の選択 -->
     <div class="question-block">
-      <span class="q-label">③ ついている役を選んでください</span>
+      <span class="q-label">④ ついている役を選んでください</span>
       <div class="yaku-grid" id="yakuContainer"></div>
     </div>
 
-    <!-- ドラ -->
+    <!-- ⑤ ドラ -->
     <div class="question-block">
-      <span class="q-label">④ ドラ・赤ドラ・裏ドラの合計枚数</span>
+      <span class="q-label">⑤ ドラ・裏ドラの合計枚数</span>
       <div class="stepper">
         <button onclick="changeDora(-1)">−</button>
         <span id="doraCount">0</span>
@@ -393,16 +527,38 @@
   <!-- 第2フェーズ：符の確定（必要な場合のみ表示） -->
   <section class="card" id="fuSection">
     <div class="card-title">
-      <span><span class="step-badge">STEP 2</span>手牌の符計算</span>
-      <span id="fuSummary" style="font-size:0.9rem; color:#be185d;">計 30符 ➔ 30符</span>
+      <span><span class="step-badge">STEP 2</span>符の計算</span>
+      <span id="fuSummary" style="font-size:0.92rem; color:#be185d;">計 30符 ➔ 30符</span>
     </div>
 
+    <!-- 計算式まとめ -->
+    <div class="fu-formula-banner">
+      <div>基本符＋アガリ方につく符＋待ちにつく符＋アタマにつく符＋形につく符</div>
+      <div class="fu-formula-nums" id="fuFormulaDetail">20 ＋ 10 ＋ 0 ＋ 0 ＋ 0 ＝ 30符 ➔ 30符</div>
+    </div>
+
+    <!-- ◎基本符 ＋ ◎アガリ方につく符（自動反映） -->
     <div class="question-block">
-      <span class="q-label">① 待ちの形は？</span>
+      <span class="q-label">◎基本符・◎アガリ方につく符（自動計算）</span>
+      <div class="auto-fu-box">
+        <div class="auto-fu-row">
+          <span>◎基本符（フーテイ）</span>
+          <span class="auto-fu-val">20符</span>
+        </div>
+        <div class="auto-fu-row">
+          <span id="agariFuLabel">◎アガリ方につく符：メンゼンロン（門前加符）</span>
+          <span class="auto-fu-val" id="agariFuVal">＋10符</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ◎待ちにつく符 -->
+    <div class="question-block">
+      <span class="q-label">◎待ちにつく符</span>
+      <span class="q-note">※リャンメン、シャンポン待ちは0符</span>
       <div class="btn-group">
         <button class="btn-toggle btn-visual active" id="waitRyanmen" onclick="setWait('ryanmen')">
           <div class="tile-illust">
-            <!-- 両面待ちのイラスト: [1(待)] ← [2][3] → [4(待)] -->
             <svg width="136" height="36" viewBox="0 0 136 36" aria-hidden="true">
               <rect x="2" y="4" width="22" height="28" rx="4" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="3 2"/>
               <text x="13" y="23" text-anchor="middle" font-size="13" font-weight="700" fill="#db2777">1</text>
@@ -416,13 +572,12 @@
               <text x="123" y="23" text-anchor="middle" font-size="13" font-weight="700" fill="#db2777">4</text>
             </svg>
           </div>
-          <span>両面 / シャンポン</span>
-          <span class="btn-subtext">+0符</span>
+          <span>リャンメン／シャンポン待ち</span>
+          <span class="btn-subtext">0符</span>
         </button>
 
         <button class="btn-toggle btn-visual" id="waitBad" onclick="setWait('bad')">
           <div class="tile-illust">
-            <!-- カンチャン・単騎のイラスト: [2][3(待)][4] / [単(待)] -->
             <svg width="136" height="36" viewBox="0 0 136 36" aria-hidden="true">
               <rect x="4" y="4" width="24" height="28" rx="4" fill="#ffffff" stroke="#a855f7" stroke-width="1.5"/>
               <text x="16" y="23" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">2</text>
@@ -430,23 +585,24 @@
               <text x="44" y="23" text-anchor="middle" font-size="13" font-weight="700" fill="#db2777">3</text>
               <rect x="60" y="4" width="24" height="28" rx="4" fill="#ffffff" stroke="#a855f7" stroke-width="1.5"/>
               <text x="72" y="23" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">4</text>
-              <text x="95" y="22" text-anchor="middle" font-size="11" fill="#9ca3af">/</text>
+              <text x="95" y="22" text-anchor="middle" font-size="11" fill="#9ca3af">／</text>
               <rect x="105" y="4" width="24" height="28" rx="4" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="3 2"/>
               <text x="117" y="22" text-anchor="middle" font-size="11" font-weight="700" fill="#db2777">単</text>
             </svg>
           </div>
-          <span>カンチャン / ペンチャン / 単騎</span>
-          <span class="btn-subtext">+2符</span>
+          <span>カンチャン／ペンチャン／タンキ待ち</span>
+          <span class="btn-subtext">＋2符</span>
         </button>
       </div>
     </div>
 
+    <!-- ◎アタマにつく符 -->
     <div class="question-block">
-      <span class="q-label">② アタマ（雀頭）の種類は？</span>
+      <span class="q-label">◎アタマにつく符</span>
+      <span class="q-note">※連風牌（レンプウハイ）＝ダブ東・ダブ南</span>
       <div class="btn-group">
         <button class="btn-toggle btn-visual active" id="headNormal" onclick="setHead('normal')">
           <div class="tile-illust">
-            <!-- 数牌の対子イラスト: [五][五] -->
             <svg width="64" height="36" viewBox="0 0 64 36" aria-hidden="true">
               <rect x="6" y="4" width="24" height="28" rx="4" fill="#ffffff" stroke="#a855f7" stroke-width="1.5"/>
               <text x="18" y="23" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">五</text>
@@ -454,13 +610,12 @@
               <text x="46" y="23" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">五</text>
             </svg>
           </div>
-          <span>数牌 / 役のない風牌</span>
-          <span class="btn-subtext">+0符</span>
+          <span>数牌／役のない風牌</span>
+          <span class="btn-subtext">0符</span>
         </button>
 
         <button class="btn-toggle btn-visual" id="headYakuhai" onclick="setHead('yakuhai')">
           <div class="tile-illust">
-            <!-- 役牌の対子イラスト: [中][中] -->
             <svg width="64" height="36" viewBox="0 0 64 36" aria-hidden="true">
               <rect x="6" y="4" width="24" height="28" rx="4" fill="#ffffff" stroke="#ec4899" stroke-width="1.5"/>
               <text x="18" y="23" text-anchor="middle" font-size="14" font-weight="800" fill="#be185d">中</text>
@@ -468,15 +623,58 @@
               <text x="46" y="23" text-anchor="middle" font-size="14" font-weight="800" fill="#be185d">中</text>
             </svg>
           </div>
-          <span>役牌（白・發・中・自風・場風）</span>
-          <span class="btn-subtext">+2符</span>
+          <span>アタマが役牌</span>
+          <span class="btn-subtext">＋2符</span>
+        </button>
+
+        <button class="btn-toggle btn-visual" id="headRenpu" onclick="setHead('renpu')">
+          <div class="tile-illust">
+            <svg width="64" height="36" viewBox="0 0 64 36" aria-hidden="true">
+              <rect x="6" y="4" width="24" height="28" rx="4" fill="#fdf2f8" stroke="#db2777" stroke-width="1.5"/>
+              <text x="18" y="23" text-anchor="middle" font-size="14" font-weight="800" fill="#9d174d">東</text>
+              <rect x="34" y="4" width="24" height="28" rx="4" fill="#fdf2f8" stroke="#db2777" stroke-width="1.5"/>
+              <text x="46" y="23" text-anchor="middle" font-size="14" font-weight="800" fill="#9d174d">東</text>
+            </svg>
+          </div>
+          <span>アタマが連風牌</span>
+          <span class="btn-subtext">＋4符</span>
         </button>
       </div>
     </div>
 
+    <!-- ◎形につく符 -->
     <div class="question-block">
-      <span class="q-label">③ 刻子（3枚組）や槓子（4枚組）の個数</span>
-      <div id="kotsuContainer"></div>
+      <span class="q-label">◎形につく符</span>
+      <div class="shape-table-wrap">
+        <table class="shape-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>
+                <span class="th-sub">ポンして3枚</span>
+                <span class="th-ruby">ミンコウ</span>
+                <span class="th-main">明刻</span>
+              </th>
+              <th>
+                <span class="th-sub">自分で3枚</span>
+                <span class="th-ruby">アンコウ</span>
+                <span class="th-main">暗刻</span>
+              </th>
+              <th>
+                <span class="th-sub">人から貰って4枚</span>
+                <span class="th-ruby">ミンカン</span>
+                <span class="th-main">明槓</span>
+              </th>
+              <th>
+                <span class="th-sub">自分で4枚</span>
+                <span class="th-ruby">アンカン</span>
+                <span class="th-main">暗槓</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="shapeTableBody"></tbody>
+        </table>
+      </div>
     </div>
   </section>
 </div>
@@ -484,7 +682,7 @@
 <!-- 画面下の結果バー -->
 <div class="result-bar">
   <div class="result-info">
-    <div class="result-meta" id="resMeta">子 / 役なし</div>
+    <div class="result-meta" id="resMeta">子 ／ 役なし</div>
     <div class="result-yomi" id="resYomi">アガれません</div>
   </div>
   <div>
@@ -503,24 +701,28 @@ const state = {
   selectedYaku: [],    // 役ID配列
   dora: 0,
   waitType: 'ryanmen', // 'ryanmen' | 'bad'
-  headType: 'normal',  // 'normal' | 'yakuhai'
-  kotsu: {
-    m2: 0,  // 中張牌の明刻 (+2)
-    m4: 0,  // 中張の暗刻 / 19字の明刻 (+4)
-    m8: 0,  // 19字の暗刻 / 中張の明槓 (+8)
-    m16: 0, // 19字の明槓 / 中張の暗槓 (+16)
-    m32: 0  // 19字の暗槓 (+32)
+  headType: 'normal',  // 'normal' | 'yakuhai' | 'renpu'
+  shapes: {
+    t_minko: 0,  // タンヤオ牌 明刻 (+2)
+    t_anko: 0,   // タンヤオ牌 暗刻 (+4)
+    t_minkan: 0, // タンヤオ牌 明槓 (+8)
+    t_ankan: 0,  // タンヤオ牌 暗槓 (+16)
+    y_minko: 0,  // 1・9・字牌 明刻 (+4)
+    y_anko: 0,   // 1・9・字牌 暗刻 (+8)
+    y_minkan: 0, // 1・9・字牌 明槓 (+16)
+    y_ankan: 0   // 1・9・字牌 暗槓 (+32)
   }
 };
 
-// 役マスター
+// 役マスター（「一発」1翻を追加、全スラッシュ全角）
 const YAKU_LIST = [
+  { id: 'ippatsu', name: '一発', han: 1, menzenOnly: true, requiresRiichi: true, excludes: [] },
   { id: 'pinfu', name: '平和 (ピンフ)', han: 1, menzenOnly: true, excludes: ['yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind', 'toitoi', 'sanankou', 'chiitoitsu'] },
   { id: 'tanyao', name: 'タンヤオ', han: 1, menzenOnly: false, excludes: ['yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind', 'honitsu', 'chinitsu', 'chanta', 'junchan', 'honroto'] },
   { id: 'yakuhai_haku', name: '役牌 (白)', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
   { id: 'yakuhai_hatsu', name: '役牌 (發)', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
   { id: 'yakuhai_chun', name: '役牌 (中)', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
-  { id: 'yakuhai_wind', name: '役牌 (自風/場風)', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
+  { id: 'yakuhai_wind', name: '役牌 (自風／場風)', han: 1, menzenOnly: false, excludes: ['tanyao', 'pinfu', 'junchan', 'chinitsu'] },
   { id: 'iipeikou', name: '一盃口', han: 1, menzenOnly: true, excludes: ['chiitoitsu', 'toitoi'] },
   { id: 'chiitoitsu', name: '七対子', han: 2, menzenOnly: true, excludes: ['pinfu', 'iipeikou', 'toitoi', 'sanankou'] },
   { id: 'toitoi', name: '対々和 (トイトイ)', han: 2, menzenOnly: false, excludes: ['pinfu', 'chiitoitsu', 'iipeikou'] },
@@ -533,79 +735,128 @@ const YAKU_LIST = [
   { id: 'chinitsu', name: '清一色', han: 6, menzenOnly: false, hanNaki: 5, excludes: ['tanyao', 'honitsu', 'chanta', 'yakuhai_haku', 'yakuhai_hatsu', 'yakuhai_chun', 'yakuhai_wind'] }
 ];
 
-// 刻子・槓子のリスト（ミニ牌イラスト付き）
-const KOTSU_TYPES = [
+// 形につく符の表データ（添付画像準拠）
+const SHAPE_ROWS = [
   {
-    key: 'm2',
-    name: '中張牌の明刻 (ポン)',
-    sub: '2〜8の数牌 (+2符)',
-    svg: `<svg width="78" height="26" viewBox="0 0 78 26" aria-hidden="true">
-      <rect x="2" y="7" width="24" height="17" rx="3" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.3"/>
-      <text x="14" y="19" text-anchor="middle" font-size="10" font-weight="700" fill="#be185d">5</text>
-      <rect x="29" y="2" width="18" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
-      <text x="38" y="17" text-anchor="middle" font-size="11" font-weight="700" fill="#4c1d95">5</text>
-      <rect x="50" y="2" width="18" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
-      <text x="59" y="17" text-anchor="middle" font-size="11" font-weight="700" fill="#4c1d95">5</text>
-    </svg>`
+    rowTitle: 'タンヤオ牌',
+    rowSub: '（中張牌：2〜8）',
+    isYaochu: false,
+    cells: [
+      {
+        key: 't_minko',
+        fu: 2,
+        svg: `<svg width="68" height="26" viewBox="0 0 68 26" aria-hidden="true">
+          <rect x="2" y="8" width="22" height="16" rx="3" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.3"/>
+          <text x="13" y="19" text-anchor="middle" font-size="9" font-weight="700" fill="#be185d">五</text>
+          <rect x="27" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
+          <text x="35.5" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#4c1d95">五</text>
+          <rect x="47" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
+          <text x="55.5" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#4c1d95">五</text>
+        </svg>`
+      },
+      {
+        key: 't_anko',
+        fu: 4,
+        svg: `<svg width="60" height="26" viewBox="0 0 60 26" aria-hidden="true">
+          <rect x="2" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
+          <text x="10.5" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#4c1d95">八</text>
+          <rect x="21.5" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
+          <text x="30" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#4c1d95">八</text>
+          <rect x="41" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
+          <text x="49.5" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#4c1d95">八</text>
+        </svg>`
+      },
+      {
+        key: 't_minkan',
+        fu: 8,
+        svg: `<svg width="84" height="26" viewBox="0 0 84 26" aria-hidden="true">
+          <rect x="2" y="8" width="21" height="16" rx="3" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.3"/>
+          <text x="12.5" y="19" text-anchor="middle" font-size="9" font-weight="700" fill="#be185d">3</text>
+          <rect x="26" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
+          <text x="34.5" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#4c1d95">3</text>
+          <rect x="45.5" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
+          <text x="54" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#4c1d95">3</text>
+          <rect x="65" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
+          <text x="73.5" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#4c1d95">3</text>
+        </svg>`
+      },
+      {
+        key: 't_ankan',
+        fu: 16,
+        svg: `<svg width="80" height="26" viewBox="0 0 80 26" aria-hidden="true">
+          <rect x="2" y="2" width="17" height="22" rx="3" fill="#d8b4fe" stroke="#9333ea" stroke-width="1.3"/>
+          <rect x="21.5" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
+          <text x="30" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#4c1d95">6</text>
+          <rect x="41" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
+          <text x="49.5" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#4c1d95">6</text>
+          <rect x="60.5" y="2" width="17" height="22" rx="3" fill="#d8b4fe" stroke="#9333ea" stroke-width="1.3"/>
+        </svg>`
+      }
+    ]
   },
   {
-    key: 'm4',
-    name: '中張の暗刻 / 19字の明刻',
-    sub: '手牌の2〜8刻子、または1・9・字牌のポン (+4符)',
-    svg: `<svg width="78" height="26" viewBox="0 0 78 26" aria-hidden="true">
-      <rect x="2" y="2" width="18" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
-      <text x="11" y="17" text-anchor="middle" font-size="11" font-weight="700" fill="#4c1d95">5</text>
-      <rect x="23" y="2" width="18" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
-      <text x="32" y="17" text-anchor="middle" font-size="11" font-weight="700" fill="#4c1d95">5</text>
-      <rect x="44" y="2" width="18" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
-      <text x="53" y="17" text-anchor="middle" font-size="11" font-weight="700" fill="#4c1d95">5</text>
-    </svg>`
-  },
-  {
-    key: 'm8',
-    name: '19字の暗刻 / 中張の明槓',
-    sub: '手牌の1・9・字牌刻子、または2〜8のミンカン (+8符)',
-    svg: `<svg width="78" height="26" viewBox="0 0 78 26" aria-hidden="true">
-      <rect x="2" y="2" width="18" height="22" rx="3" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
-      <text x="11" y="17" text-anchor="middle" font-size="11" font-weight="700" fill="#be185d">東</text>
-      <rect x="23" y="2" width="18" height="22" rx="3" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
-      <text x="32" y="17" text-anchor="middle" font-size="11" font-weight="700" fill="#be185d">東</text>
-      <rect x="44" y="2" width="18" height="22" rx="3" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
-      <text x="53" y="17" text-anchor="middle" font-size="11" font-weight="700" fill="#be185d">東</text>
-    </svg>`
-  },
-  {
-    key: 'm16',
-    name: '19字の明槓 / 中張の暗槓',
-    sub: '1・9・字のミンカン、または2〜8のアンカン (+16符)',
-    svg: `<svg width="88" height="26" viewBox="0 0 88 26" aria-hidden="true">
-      <rect x="2" y="2" width="18" height="22" rx="3" fill="#d8b4fe" stroke="#9333ea" stroke-width="1.3"/>
-      <rect x="23" y="2" width="18" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
-      <text x="32" y="17" text-anchor="middle" font-size="11" font-weight="700" fill="#4c1d95">5</text>
-      <rect x="44" y="2" width="18" height="22" rx="3" fill="#ffffff" stroke="#a855f7" stroke-width="1.3"/>
-      <text x="53" y="17" text-anchor="middle" font-size="11" font-weight="700" fill="#4c1d95">5</text>
-      <rect x="65" y="2" width="18" height="22" rx="3" fill="#d8b4fe" stroke="#9333ea" stroke-width="1.3"/>
-    </svg>`
-  },
-  {
-    key: 'm32',
-    name: '1・9・字牌の暗槓',
-    sub: '手牌で揃えたアンカン (+32符)',
-    svg: `<svg width="88" height="26" viewBox="0 0 88 26" aria-hidden="true">
-      <rect x="2" y="2" width="18" height="22" rx="3" fill="#f9a8d4" stroke="#db2777" stroke-width="1.3"/>
-      <rect x="23" y="2" width="18" height="22" rx="3" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
-      <text x="32" y="17" text-anchor="middle" font-size="11" font-weight="800" fill="#be185d">中</text>
-      <rect x="44" y="2" width="18" height="22" rx="3" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
-      <text x="53" y="17" text-anchor="middle" font-size="11" font-weight="800" fill="#be185d">中</text>
-      <rect x="65" y="2" width="18" height="22" rx="3" fill="#f9a8d4" stroke="#db2777" stroke-width="1.3"/>
-    </svg>`
+    rowTitle: '1・9・字牌',
+    rowSub: '（幺九牌）',
+    isYaochu: true,
+    cells: [
+      {
+        key: 'y_minko',
+        fu: 4,
+        svg: `<svg width="68" height="26" viewBox="0 0 68 26" aria-hidden="true">
+          <rect x="2" y="8" width="22" height="16" rx="3" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.3"/>
+          <text x="13" y="19" text-anchor="middle" font-size="9" font-weight="700" fill="#be185d">9</text>
+          <rect x="27" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
+          <text x="35.5" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#be185d">9</text>
+          <rect x="47" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
+          <text x="55.5" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#be185d">9</text>
+        </svg>`
+      },
+      {
+        key: 'y_anko',
+        fu: 8,
+        svg: `<svg width="60" height="26" viewBox="0 0 60 26" aria-hidden="true">
+          <rect x="2" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
+          <text x="10.5" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#be185d">1</text>
+          <rect x="21.5" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
+          <text x="30" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#be185d">1</text>
+          <rect x="41" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
+          <text x="49.5" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#be185d">1</text>
+        </svg>`
+      },
+      {
+        key: 'y_minkan',
+        fu: 16,
+        svg: `<svg width="84" height="26" viewBox="0 0 84 26" aria-hidden="true">
+          <rect x="2" y="8" width="21" height="16" rx="3" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.3"/>
+          <text x="12.5" y="19" text-anchor="middle" font-size="9" font-weight="700" fill="#be185d">東</text>
+          <rect x="26" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
+          <text x="34.5" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#be185d">東</text>
+          <rect x="45.5" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
+          <text x="54" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#be185d">東</text>
+          <rect x="65" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
+          <text x="73.5" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#be185d">東</text>
+        </svg>`
+      },
+      {
+        key: 'y_ankan',
+        fu: 32,
+        svg: `<svg width="80" height="26" viewBox="0 0 80 26" aria-hidden="true">
+          <rect x="2" y="2" width="17" height="22" rx="3" fill="#f9a8d4" stroke="#db2777" stroke-width="1.3"/>
+          <rect x="21.5" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
+          <text x="30" y="16" text-anchor="middle" font-size="10" font-weight="800" fill="#be185d">中</text>
+          <rect x="41" y="2" width="17" height="22" rx="3" fill="#ffffff" stroke="#ec4899" stroke-width="1.3"/>
+          <text x="49.5" y="16" text-anchor="middle" font-size="10" font-weight="800" fill="#be185d">中</text>
+          <rect x="60.5" y="2" width="17" height="22" rx="3" fill="#f9a8d4" stroke="#db2777" stroke-width="1.3"/>
+        </svg>`
+      }
+    ]
   }
 ];
 
 // --- 初期化 ---
 function init() {
   renderYakuGrid();
-  renderKotsuRows();
+  renderShapeTable();
   recalc();
 }
 
@@ -627,27 +878,35 @@ function renderYakuGrid() {
   });
 }
 
-// 刻子カウンターの描画
-function renderKotsuRows() {
-  const container = document.getElementById('kotsuContainer');
-  container.innerHTML = '';
+// 形につく符テーブルの描画
+function renderShapeTable() {
+  const tbody = document.getElementById('shapeTableBody');
+  tbody.innerHTML = '';
 
-  KOTSU_TYPES.forEach(item => {
-    const row = document.createElement('div');
-    row.className = 'kotsu-row';
-    row.innerHTML = `
-      <div class="kotsu-left">
-        <span class="kotsu-name">${item.name}</span>
-        <span class="kotsu-sub">${item.sub}</span>
-        <div class="kotsu-illust">${item.svg}</div>
-      </div>
-      <div class="stepper">
-        <button onclick="changeKotsu('${item.key}', -1)">−</button>
-        <span id="kotsu_${item.key}">0</span>
-        <button onclick="changeKotsu('${item.key}', 1)">＋</button>
-      </div>
-    `;
-    container.appendChild(row);
+  SHAPE_ROWS.forEach(row => {
+    const tr = document.createElement('tr');
+    const th = document.createElement('th');
+    th.className = 'row-header';
+    th.innerHTML = `${row.rowTitle}<span class="row-header-sub">${row.rowSub}</span>`;
+    tr.appendChild(th);
+
+    row.cells.forEach(cell => {
+      const td = document.createElement('td');
+      td.className = 'shape-cell';
+      td.id = 'cell_' + cell.key;
+      td.innerHTML = `
+        <div class="cell-fu">${cell.fu}符</div>
+        <div class="cell-svg">${cell.svg}</div>
+        <div class="mini-stepper">
+          <button id="dec_${cell.key}" onclick="changeShape('${cell.key}', -1)">−</button>
+          <span id="val_${cell.key}">0</span>
+          <button id="inc_${cell.key}" onclick="changeShape('${cell.key}', 1)">＋</button>
+        </div>
+      `;
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
   });
 }
 
@@ -671,10 +930,14 @@ function setMenzen(menzen) {
   document.getElementById('btnMenzen').classList.toggle('active', menzen);
   document.getElementById('btnNaki').classList.toggle('active', !menzen);
 
-  // 鳴きならリーチ不可
+  // 鳴きならリーチ・一発不可
   const riichiBlock = document.getElementById('riichiBlock');
   if (!menzen) {
-    setRiichi('none');
+    state.riichi = 'none';
+    ['riichiNone', 'riichiNormal', 'riichiDouble'].forEach(id => {
+      document.getElementById(id).classList.remove('active');
+    });
+    document.getElementById('riichiNone').classList.add('active');
     riichiBlock.style.opacity = '0.4';
     riichiBlock.style.pointerEvents = 'none';
   } else {
@@ -697,7 +960,11 @@ function setRiichi(riichi) {
   ['riichiNone', 'riichiNormal', 'riichiDouble'].forEach(id => {
     document.getElementById(id).classList.remove('active');
   });
-  if (riichi === 'none') document.getElementById('riichiNone').classList.add('active');
+  if (riichi === 'none') {
+    document.getElementById('riichiNone').classList.add('active');
+    // リーチなしなら一発を自動解除
+    state.selectedYaku = state.selectedYaku.filter(id => id !== 'ippatsu');
+  }
   if (riichi === 'riichi') document.getElementById('riichiNormal').classList.add('active');
   if (riichi === 'double') document.getElementById('riichiDouble').classList.add('active');
   recalc();
@@ -741,17 +1008,19 @@ function setHead(head) {
   state.headType = head;
   document.getElementById('headNormal').classList.toggle('active', head === 'normal');
   document.getElementById('headYakuhai').classList.toggle('active', head === 'yakuhai');
+  document.getElementById('headRenpu').classList.toggle('active', head === 'renpu');
   recalc();
 }
 
-function changeKotsu(key, delta) {
-  state.kotsu[key] = Math.max(0, Math.min(4, state.kotsu[key] + delta));
-  document.getElementById('kotsu_' + key).innerText = state.kotsu[key];
+function changeShape(key, delta) {
+  state.shapes[key] = Math.max(0, Math.min(4, state.shapes[key] + delta));
+  document.getElementById('val_' + key).innerText = state.shapes[key];
   recalc();
 }
 
-// --- 排他ルールの判定とボタン更新 ---
-function updateYakuButtons() {
+// --- 排他ルールの判定とUI更新 ---
+function updateConstraints() {
+  // 役ボタンの状態更新
   YAKU_LIST.forEach(yaku => {
     const btn = document.getElementById('yaku_' + yaku.id);
     if (!btn) return;
@@ -764,6 +1033,9 @@ function updateYakuButtons() {
     // 門前限定役
     if (yaku.menzenOnly && !state.menzen) disabled = true;
 
+    // リーチ必須役（一発）
+    if (yaku.requiresRiichi && state.riichi === 'none') disabled = true;
+
     // 他の選択役との排他チェック
     state.selectedYaku.forEach(selectedId => {
       if (selectedId === yaku.id) return;
@@ -775,22 +1047,53 @@ function updateYakuButtons() {
     btn.disabled = disabled;
   });
 
-  // タンヤオ選択時の符計算（役牌頭）の無効化
+  // タンヤオ選択時の符計算（役牌・連風牌アタマ、1・9・字牌の形）の無効化
   const hasTanyao = state.selectedYaku.includes('tanyao');
   const headYakuhaiBtn = document.getElementById('headYakuhai');
+  const headRenpuBtn = document.getElementById('headRenpu');
+
   if (hasTanyao) {
-    if (state.headType === 'yakuhai') setHead('normal');
+    if (state.headType === 'yakuhai' || state.headType === 'renpu') {
+      state.headType = 'normal';
+      document.getElementById('headNormal').classList.add('active');
+      headYakuhaiBtn.classList.remove('active');
+      headRenpuBtn.classList.remove('active');
+    }
     headYakuhaiBtn.disabled = true;
-    headYakuhaiBtn.title = 'タンヤオ成立時は役牌雀頭不可';
+    headRenpuBtn.disabled = true;
   } else {
     headYakuhaiBtn.disabled = false;
-    headYakuhaiBtn.title = '';
+    headRenpuBtn.disabled = false;
   }
+
+  // 形テーブルのハイライト＆タンヤオ時の1・9・字牌無効化
+  SHAPE_ROWS.forEach(row => {
+    row.cells.forEach(cell => {
+      const td = document.getElementById('cell_' + cell.key);
+      const decBtn = document.getElementById('dec_' + cell.key);
+      const incBtn = document.getElementById('inc_' + cell.key);
+      const valSpan = document.getElementById('val_' + cell.key);
+
+      if (hasTanyao && row.isYaochu) {
+        state.shapes[cell.key] = 0;
+        valSpan.innerText = '0';
+        td.classList.add('disabled-cell');
+        td.classList.remove('has-count');
+        decBtn.disabled = true;
+        incBtn.disabled = true;
+      } else {
+        td.classList.remove('disabled-cell');
+        td.classList.toggle('has-count', state.shapes[cell.key] > 0);
+        decBtn.disabled = false;
+        incBtn.disabled = false;
+      }
+    });
+  });
 }
 
 // --- 符・翻・点数の総合計算 ---
 function recalc() {
-  updateYakuButtons();
+  updateConstraints();
 
   // 1. 翻数の集計
   let han = 0;
@@ -838,18 +1141,41 @@ function recalc() {
     fuSection.style.display = 'block';
     skipMessage.style.display = 'none';
 
-    // 通常の符計算
-    let rawFu = 20; // 底符
-    if (state.menzen && state.winType === 'ron') rawFu += 10; // 門前加符
-    if (state.winType === 'tsumo') rawFu += 2; // ツモ符
-    if (state.waitType === 'bad') rawFu += 2;  // 愚形待ち
-    if (state.headType === 'yakuhai') rawFu += 2; // 役牌頭
+    // 各カテゴリの符を計算
+    const baseFu = 20;
 
-    rawFu += state.kotsu.m2 * 2;
-    rawFu += state.kotsu.m4 * 4;
-    rawFu += state.kotsu.m8 * 8;
-    rawFu += state.kotsu.m16 * 16;
-    rawFu += state.kotsu.m32 * 32;
+    let agariFu = 0;
+    let agariLabel = '';
+    if (state.winType === 'tsumo') {
+      agariFu = 2;
+      agariLabel = '◎アガリ方につく符：ツモ符';
+    } else if (state.menzen && state.winType === 'ron') {
+      agariFu = 10;
+      agariLabel = '◎アガリ方につく符：メンゼンロン（門前加符）';
+    } else {
+      agariFu = 0;
+      agariLabel = '◎アガリ方につく符：鳴いてロン（0符）';
+    }
+    document.getElementById('agariFuLabel').innerText = agariLabel;
+    document.getElementById('agariFuVal').innerText = agariFu > 0 ? `＋${agariFu}符` : '0符';
+
+    const waitFu = state.waitType === 'bad' ? 2 : 0;
+
+    let headFu = 0;
+    if (state.headType === 'yakuhai') headFu = 2;
+    if (state.headType === 'renpu') headFu = 4;
+
+    const shapeFu =
+      state.shapes.t_minko * 2 +
+      state.shapes.t_anko * 4 +
+      state.shapes.t_minkan * 8 +
+      state.shapes.t_ankan * 16 +
+      state.shapes.y_minko * 4 +
+      state.shapes.y_anko * 8 +
+      state.shapes.y_minkan * 16 +
+      state.shapes.y_ankan * 32;
+
+    const rawFu = baseFu + agariFu + waitFu + headFu + shapeFu;
 
     // 切り上げ（鳴きロンで20符の形は30符特例）
     if (!state.menzen && state.winType === 'ron' && rawFu === 20) {
@@ -860,31 +1186,33 @@ function recalc() {
     if (finalFu < 30 && !hasChiitoi) finalFu = 30;
 
     document.getElementById('fuSummary').innerText = `計 ${rawFu}符 ➔ ${finalFu}符`;
+    document.getElementById('fuFormulaDetail').innerText =
+      `${baseFu} ＋ ${agariFu} ＋ ${waitFu} ＋ ${headFu} ＋ ${shapeFu} ＝ ${rawFu}符 ➔ ${finalFu}符`;
   }
 
   // 3. 点数算出と表示更新
   updateResult(han, finalFu);
 }
 
-// 点数計算テーブル（1〜4翻）
+// 点数計算テーブル（1〜4翻・全スラッシュ全角）
 const SCORE_DATA = {
   child: {
     20: { 2: { tsumo: '400・700', yomi: 'ヨンヒャク・ナナヒャク' }, 3: { tsumo: '700・1300', yomi: 'ナナヒャク・センサンビャク' }, 4: { tsumo: '1300・2600', yomi: 'センサンビャク・ニセンロッピャク' } },
-    25: { 2: { ron: 1600, yomi: 'イチロク' }, 3: { ron: 3200, tsumo: '800・1600', yomi: 'ザンニ / ハッピャク・イチロク' }, 4: { ron: 6400, tsumo: '1600・3200', yomi: 'ロクヨン / イチロク・ザンニ' } },
-    30: { 1: { ron: 1000, tsumo: '300・500', yomi: 'セン / サンビャク・ゴヒャク' }, 2: { ron: 2000, tsumo: '500・1000', yomi: 'ニセン / ゴヒャク・セン' }, 3: { ron: 3900, tsumo: '1000・2000', yomi: 'サンキュウ / セン・ニセン' }, 4: { ron: 7700, tsumo: '2000・3900', yomi: 'ナナナナ / ニセン・サンキュウ' } },
-    40: { 1: { ron: 1300, tsumo: '400・700', yomi: 'センサン / ヨンヒャク・ナナヒャク' }, 2: { ron: 2600, tsumo: '700・1300', yomi: 'ニーロク / ナナヒャク・センサン' }, 3: { ron: 5200, tsumo: '1300・2600', yomi: 'ゴニ / センサン・ニーロク' }, 4: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン / ニセン・ヨンセン' } },
-    50: { 1: { ron: 1600, tsumo: '400・800', yomi: 'イチロク / ヨンヒャク・ハッピャク' }, 2: { ron: 3200, tsumo: '800・1600', yomi: 'ザンニ / ハッピャク・イチロク' }, 3: { ron: 6400, tsumo: '1600・3200', yomi: 'ロクヨン / イチロク・ザンニ' }, 4: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン / ニセン・ヨンセン' } },
-    60: { 1: { ron: 2000, tsumo: '500・1000', yomi: 'ニセン / ゴヒャク・セン' }, 2: { ron: 3900, tsumo: '1000・2000', yomi: 'サンキュウ / セン・ニセン' }, 3: { ron: 7700, tsumo: '2000・3900', yomi: 'ナナナナ / ニセン・サンキュウ' }, 4: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン / ニセン・ヨンセン' } },
-    70: { 1: { ron: 2300, tsumo: '600・1200', yomi: 'ニーサン / ロッピャク・センニ' }, 2: { ron: 4500, tsumo: '1200・2300', yomi: 'ヨンゴー / センニ・ニーサン' }, 3: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン / ニセン・ヨンセン' }, 4: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン / ニセン・ヨンセン' } }
+    25: { 2: { ron: 1600, yomi: 'イチロク' }, 3: { ron: 3200, tsumo: '800・1600', yomi: 'ザンニ ／ ハッピャク・イチロク' }, 4: { ron: 6400, tsumo: '1600・3200', yomi: 'ロクヨン ／ イチロク・ザンニ' } },
+    30: { 1: { ron: 1000, tsumo: '300・500', yomi: 'セン ／ サンビャク・ゴヒャク' }, 2: { ron: 2000, tsumo: '500・1000', yomi: 'ニセン ／ ゴヒャク・セン' }, 3: { ron: 3900, tsumo: '1000・2000', yomi: 'サンキュウ ／ セン・ニセン' }, 4: { ron: 7700, tsumo: '2000・3900', yomi: 'ナナナナ ／ ニセン・サンキュウ' } },
+    40: { 1: { ron: 1300, tsumo: '400・700', yomi: 'センサン ／ ヨンヒャク・ナナヒャク' }, 2: { ron: 2600, tsumo: '700・1300', yomi: 'ニーロク ／ ナナヒャク・センサン' }, 3: { ron: 5200, tsumo: '1300・2600', yomi: 'ゴニ ／ センサン・ニーロク' }, 4: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン ／ ニセン・ヨンセン' } },
+    50: { 1: { ron: 1600, tsumo: '400・800', yomi: 'イチロク ／ ヨンヒャク・ハッピャク' }, 2: { ron: 3200, tsumo: '800・1600', yomi: 'ザンニ ／ ハッピャク・イチロク' }, 3: { ron: 6400, tsumo: '1600・3200', yomi: 'ロクヨン ／ イチロク・ザンニ' }, 4: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン ／ ニセン・ヨンセン' } },
+    60: { 1: { ron: 2000, tsumo: '500・1000', yomi: 'ニセン ／ ゴヒャク・セン' }, 2: { ron: 3900, tsumo: '1000・2000', yomi: 'サンキュウ ／ セン・ニセン' }, 3: { ron: 7700, tsumo: '2000・3900', yomi: 'ナナナナ ／ ニセン・サンキュウ' }, 4: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン ／ ニセン・ヨンセン' } },
+    70: { 1: { ron: 2300, tsumo: '600・1200', yomi: 'ニーサン ／ ロッピャク・センニ' }, 2: { ron: 4500, tsumo: '1200・2300', yomi: 'ヨンゴー ／ センニ・ニーサン' }, 3: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン ／ ニセン・ヨンセン' }, 4: { ron: 8000, tsumo: '2000・4000', yomi: 'マンガン ／ ニセン・ヨンセン' } }
   },
   dealer: {
     20: { 2: { tsumo: '700オール', yomi: 'ナナヒャクオール' }, 3: { tsumo: '1300オール', yomi: 'センサンビャクオール' }, 4: { tsumo: '2600オール', yomi: 'ニセンロッピャクオール' } },
-    25: { 2: { ron: 2400, yomi: 'ニーヨン' }, 3: { ron: 4800, tsumo: '1600オール', yomi: 'ヨンパチ / イチロクオール' }, 4: { ron: 9600, tsumo: '3200オール', yomi: 'クンロク / ザンニオール' } },
-    30: { 1: { ron: 1500, tsumo: '500オール', yomi: 'イチゴー / ゴヒャクオール' }, 2: { ron: 2900, tsumo: '1000オール', yomi: 'ニック / センオール' }, 3: { ron: 5800, tsumo: '2000オール', yomi: 'ゴッパ / ニセンオール' }, 4: { ron: 11600, tsumo: '3900オール', yomi: 'ピンロク / サンキュウオール' } },
-    40: { 1: { ron: 2000, tsumo: '700オール', yomi: 'ニセン / ナナヒャクオール' }, 2: { ron: 3900, tsumo: '1300オール', yomi: 'サンキュウ / センサンオール' }, 3: { ron: 7700, tsumo: '2600オール', yomi: 'ナナナナ / ニーロクオール' }, 4: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン / ヨンセンオール' } },
-    50: { 1: { ron: 2400, tsumo: '800オール', yomi: 'ニーヨン / ハッピャクオール' }, 2: { ron: 4800, tsumo: '1600オール', yomi: 'ヨンパチ / イチロクオール' }, 3: { ron: 9600, tsumo: '3200オール', yomi: 'クンロク / ザンニオール' }, 4: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン / ヨンセンオール' } },
-    60: { 1: { ron: 2900, tsumo: '1000オール', yomi: 'ニック / センオール' }, 2: { ron: 5800, tsumo: '2000オール', yomi: 'ゴッパ / ニセンオール' }, 3: { ron: 11600, tsumo: '3900オール', yomi: 'ピンロク / サンキュウオール' }, 4: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン / ヨンセンオール' } },
-    70: { 1: { ron: 3400, tsumo: '1200オール', yomi: 'サンヨン / センニオール' }, 2: { ron: 6800, tsumo: '2300オール', yomi: 'ロッパチ / ニーサンオール' }, 3: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン / ヨンセンオール' }, 4: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン / ヨンセンオール' } }
+    25: { 2: { ron: 2400, yomi: 'ニーヨン' }, 3: { ron: 4800, tsumo: '1600オール', yomi: 'ヨンパチ ／ イチロクオール' }, 4: { ron: 9600, tsumo: '3200オール', yomi: 'クンロク ／ ザンニオール' } },
+    30: { 1: { ron: 1500, tsumo: '500オール', yomi: 'イチゴー ／ ゴヒャクオール' }, 2: { ron: 2900, tsumo: '1000オール', yomi: 'ニック ／ センオール' }, 3: { ron: 5800, tsumo: '2000オール', yomi: 'ゴッパ ／ ニセンオール' }, 4: { ron: 11600, tsumo: '3900オール', yomi: 'ピンロク ／ サンキュウオール' } },
+    40: { 1: { ron: 2000, tsumo: '700オール', yomi: 'ニセン ／ ナナヒャクオール' }, 2: { ron: 3900, tsumo: '1300オール', yomi: 'サンキュウ ／ センサンオール' }, 3: { ron: 7700, tsumo: '2600オール', yomi: 'ナナナナ ／ ニーロクオール' }, 4: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン ／ ヨンセンオール' } },
+    50: { 1: { ron: 2400, tsumo: '800オール', yomi: 'ニーヨン ／ ハッピャクオール' }, 2: { ron: 4800, tsumo: '1600オール', yomi: 'ヨンパチ ／ イチロクオール' }, 3: { ron: 9600, tsumo: '3200オール', yomi: 'クンロク ／ ザンニオール' }, 4: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン ／ ヨンセンオール' } },
+    60: { 1: { ron: 2900, tsumo: '1000オール', yomi: 'ニック ／ センオール' }, 2: { ron: 5800, tsumo: '2000オール', yomi: 'ゴッパ ／ ニセンオール' }, 3: { ron: 11600, tsumo: '3900オール', yomi: 'ピンロク ／ サンキュウオール' }, 4: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン ／ ヨンセンオール' } },
+    70: { 1: { ron: 3400, tsumo: '1200オール', yomi: 'サンヨン ／ センニオール' }, 2: { ron: 6800, tsumo: '2300オール', yomi: 'ロッパチ ／ ニーサンオール' }, 3: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン ／ ヨンセンオール' }, 4: { ron: 12000, tsumo: '4000オール', yomi: 'マンガン ／ ヨンセンオール' } }
   }
 };
 
@@ -898,7 +1226,7 @@ function updateResult(han, fu) {
 
   // 役なしチェック
   if (han === 0) {
-    metaEl.innerText = `${roleName} / 役なし`;
+    metaEl.innerText = `${roleName} ／ 役なし`;
     yomiEl.innerText = 'アガれません';
     scoreEl.innerText = '0 点';
     breakEl.innerText = '役を1つ以上選択してください';
@@ -912,30 +1240,30 @@ function updateResult(han, fu) {
       title = '満貫 (マンガン)';
       scoreStr = isDealer ? '12,000 点' : '8,000 点';
       yomi = isDealer ? (state.winType === 'ron' ? 'イチニッパ' : 'ヨンセンオール') : (state.winType === 'ron' ? 'マンガン' : 'ニセン・ヨンセン');
-      breakStr = isDealer ? (state.winType === 'tsumo' ? '4,000点オール' : '') : (state.winType === 'tsumo' ? '子2,000 / 親4,000' : '');
+      breakStr = isDealer ? (state.winType === 'tsumo' ? '4,000点オール' : '') : (state.winType === 'tsumo' ? '子2,000 ／ 親4,000' : '');
     } else if (han <= 7) {
       title = '跳満 (ハネマン)';
       scoreStr = isDealer ? '18,000 点' : '12,000 点';
       yomi = isDealer ? (state.winType === 'ron' ? 'イチハチ' : 'ロクセンオール') : (state.winType === 'ron' ? 'イチニッパ' : 'サンゼン・ロクセン');
-      breakStr = isDealer ? (state.winType === 'tsumo' ? '6,000点オール' : '') : (state.winType === 'tsumo' ? '子3,000 / 親6,000' : '');
+      breakStr = isDealer ? (state.winType === 'tsumo' ? '6,000点オール' : '') : (state.winType === 'tsumo' ? '子3,000 ／ 親6,000' : '');
     } else if (han <= 10) {
       title = '倍満 (バイマン)';
       scoreStr = isDealer ? '24,000 点' : '16,000 点';
       yomi = isDealer ? (state.winType === 'ron' ? 'ニーヨン' : 'ハッセンオール') : (state.winType === 'ron' ? 'イチロク' : 'ヨンセン・ハッセン');
-      breakStr = isDealer ? (state.winType === 'tsumo' ? '8,000点オール' : '') : (state.winType === 'tsumo' ? '子4,000 / 親8,000' : '');
+      breakStr = isDealer ? (state.winType === 'tsumo' ? '8,000点オール' : '') : (state.winType === 'tsumo' ? '子4,000 ／ 親8,000' : '');
     } else if (han <= 12) {
       title = '三倍満 (サンバイマン)';
       scoreStr = isDealer ? '36,000 点' : '24,000 点';
       yomi = isDealer ? (state.winType === 'ron' ? 'サンロク' : 'イチニオール') : (state.winType === 'ron' ? 'ニーヨン' : 'ロクセン・イチニ');
-      breakStr = isDealer ? (state.winType === 'tsumo' ? '12,000点オール' : '') : (state.winType === 'tsumo' ? '子6,000 / 親12,000' : '');
+      breakStr = isDealer ? (state.winType === 'tsumo' ? '12,000点オール' : '') : (state.winType === 'tsumo' ? '子6,000 ／ 親12,000' : '');
     } else {
       title = '数え役満 (ヤクマン)';
       scoreStr = isDealer ? '48,000 点' : '32,000 点';
       yomi = isDealer ? (state.winType === 'ron' ? 'ヨンパチ' : 'イチロクオール') : (state.winType === 'ron' ? 'ザンニ' : 'ハッセン・イチロク');
-      breakStr = isDealer ? (state.winType === 'tsumo' ? '16,000点オール' : '') : (state.winType === 'tsumo' ? '子8,000 / 親16,000' : '');
+      breakStr = isDealer ? (state.winType === 'tsumo' ? '16,000点オール' : '') : (state.winType === 'tsumo' ? '子8,000 ／ 親16,000' : '');
     }
 
-    metaEl.innerText = `${roleName} / ${han}翻 【${title}】`;
+    metaEl.innerText = `${roleName} ／ ${han}翻 【${title}】`;
     yomiEl.innerText = yomi;
     scoreEl.innerText = scoreStr;
     breakEl.innerText = breakStr;
@@ -947,7 +1275,7 @@ function updateResult(han, fu) {
   const table = isDealer ? SCORE_DATA.dealer : SCORE_DATA.child;
   const entry = (table[safeFu] && table[safeFu][han]) ? table[safeFu][han] : null;
 
-  metaEl.innerText = `${roleName} / ${han}翻 ${safeFu}符`;
+  metaEl.innerText = `${roleName} ／ ${han}翻 ${safeFu}符`;
 
   if (!entry) {
     scoreEl.innerText = isDealer ? '満貫 12,000 点' : '満貫 8,000 点';
@@ -960,7 +1288,7 @@ function updateResult(han, fu) {
     if (entry.tsumo) {
       scoreEl.innerText = entry.tsumo;
       yomiEl.innerText = entry.yomi || '';
-      breakEl.innerText = isDealer ? '各家から均等払い' : '子払い / 親払い';
+      breakEl.innerText = isDealer ? '各家から均等払い' : '子払い ／ 親払い';
     } else {
       scoreEl.innerText = entry.ron ? entry.ron.toLocaleString() + ' 点' : '-';
       yomiEl.innerText = entry.yomi || '';
